@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>data_assets/qt-logo.png</file>
+        <file>data_assets/share_file.pdf</file>
+    </qresource>
+</RCC>
