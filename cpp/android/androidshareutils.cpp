@@ -74,6 +74,11 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
     }
 
     // THE MIME TYPE
+    if(mimeType.isEmpty()) {
+        // attention: with an empty MimeType the APP will crash with a JNI Error !
+        qWarning() << "mime type is empty";
+        return;
+    }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniMimeType = QAndroidJniObject::fromString(mimeType);
     if(!jniMimeType.isValid()) {
@@ -156,6 +161,11 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
     }
 
     // THE FILE TYPE
+    if(mimeType.isEmpty()) {
+        // attention: with an empty MimeType the APP will crash with a JNI Error !
+        qWarning() << "mime type is empty";
+        return;
+    }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniType = QAndroidJniObject::fromString(mimeType);
     if(!jniType.isValid()) {
@@ -223,6 +233,11 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
     }
 
     // THE FILE TYPE
+    if(mimeType.isEmpty()) {
+        // attention: with an empty MimeType the APP will crash with a JNI Error !
+        qWarning() << "mime type is empty";
+        return;
+    }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniType = QAndroidJniObject::fromString(mimeType);
     if(!jniType.isValid()) {
