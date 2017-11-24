@@ -107,6 +107,17 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
         return;
     }
 
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    QAndroidJniObject packageManager = activity.callObjectMethod("getPackageManager",
+                                                                 "()Landroid/content/pm/PackageManager;");
+    QAndroidJniObject componentName = jniIntent.callObjectMethod("resolveActivity",
+                                                              "(Landroid/content/pm/PackageManager;)Landroid/content/ComponentName;",
+                                                              packageManager.object());
+    if (!componentName.isValid()) {
+        qWarning() << "Unable to resolve activity";
+        return;
+    }
+
     // now all is ready to start the Activity:
     // we have the JNI Object, know the requestId
     // and want the Result back into 'this' handleActivityResult(...)
@@ -179,6 +190,17 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
         return;
     }
 
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    QAndroidJniObject packageManager = activity.callObjectMethod("getPackageManager",
+                                                                 "()Landroid/content/pm/PackageManager;");
+    QAndroidJniObject componentName = jniIntent.callObjectMethod("resolveActivity",
+                                                              "(Landroid/content/pm/PackageManager;)Landroid/content/ComponentName;",
+                                                              packageManager.object());
+    if (!componentName.isValid()) {
+        qWarning() << "Unable to resolve activity";
+        return;
+    }
+
     // now all is ready to start the Activity:
     // we have the JNI Object, know the requestId
     // and want the Result back into 'this' handleActivityResult(...)
@@ -248,6 +270,17 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniResult = jniIntent.callObjectMethod("setDataAndType", "(Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;", jniUri.object<jobject>(), jniType.object<jstring>());
     if(!jniResult.isValid()) {
         qWarning() << "QAndroidJniObject jniResult not valid.";
+        return;
+    }
+
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    QAndroidJniObject packageManager = activity.callObjectMethod("getPackageManager",
+                                                                 "()Landroid/content/pm/PackageManager;");
+    QAndroidJniObject componentName = jniIntent.callObjectMethod("resolveActivity",
+                                                              "(Landroid/content/pm/PackageManager;)Landroid/content/ComponentName;",
+                                                              packageManager.object());
+    if (!componentName.isValid()) {
+        qWarning() << "Unable to resolve activity";
         return;
     }
 
