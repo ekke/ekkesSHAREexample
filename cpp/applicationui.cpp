@@ -123,7 +123,7 @@ bool ApplicationUI::copyAssetFile(const QString sourceFilePath, const QString de
 }
 
 // Data files in AppDataLocation cannot shared with other APPs
-// so we copy them into out working directory inside USERS DOCUMENTS location
+// so we copy them into our working directory inside USERS DOCUMENTS location
 //
 QString ApplicationUI::filePathDocumentsLocation(const int requestId) {
     QString sourceFilePath;
