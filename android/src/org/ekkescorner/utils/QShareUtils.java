@@ -37,7 +37,13 @@ public class QShareUtils
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, text + " " + url);
         sendIntent.setType("text/plain");
-        QtNative.activity().startActivity(sendIntent);
+
+        // Verify that the intent will resolve to an activity
+        if (sendIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            QtNative.activity().startActivity(sendIntent);
+        } else {
+            Log.d("ekkescorner share", "Intent not resolved");
+        }
     }
 
     public static void sendFile(String filePath, String title, String mimeType) {
@@ -55,7 +61,13 @@ public class QShareUtils
         sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         sendIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-        QtNative.activity().startActivity(Intent.createChooser(sendIntent, title));
+
+        // Verify that the intent will resolve to an activity
+        if (sendIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            QtNative.activity().startActivity(Intent.createChooser(sendIntent, title));
+        } else {
+            Log.d("ekkescorner sendFile", "Intent not resolved");
+        }
     }
 
     public static void viewFile(String filePath, String title, String mimeType) {
@@ -72,7 +84,12 @@ public class QShareUtils
         viewIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         viewIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-        QtNative.activity().startActivity(Intent.createChooser(viewIntent, title));
+        // Verify that the intent will resolve to an activity
+        if (viewIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            QtNative.activity().startActivity(Intent.createChooser(viewIntent, title));
+        } else {
+            Log.d("ekkescorner viewFile", "Intent not resolved");
+        }
     }
 
     public static void editFile(String filePath, String title, String mimeType) {
@@ -89,7 +106,12 @@ public class QShareUtils
         editIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         editIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
 
-        QtNative.activity().startActivityForResult(Intent.createChooser(editIntent, title), EDIT_FILE);
+        // Verify that the intent will resolve to an activity
+        if (editIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            QtNative.activity().startActivityForResult(Intent.createChooser(editIntent, title), EDIT_FILE);
+        } else {
+            Log.d("ekkescorner editFile", "Intent not resolved");
+        }
     }
 
 }
