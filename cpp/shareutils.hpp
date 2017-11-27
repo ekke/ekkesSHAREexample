@@ -26,6 +26,7 @@ class PlatformShareUtils : public QObject
 signals:
     void shareEditDone(int requestCode);
     void shareFinished(int requestCode);
+    void shareNoAppAvailable(int requestCode);
 
 public:
     PlatformShareUtils(QObject *parent = 0) : QObject(parent){}
@@ -47,10 +48,12 @@ class ShareUtils : public QObject
 signals:
     void shareEditDone(int requestCode);
     void shareFinished(int requestCode);
+    void shareNoAppAvailable(int requestCode);
 
 public slots:
     void onShareEditDone(int requestCode);
     void onShareFinished(int requestCode);
+    void onShareNoAppAvailable(int requestCode);
 
 public:
     explicit ShareUtils(QObject *parent = 0);
