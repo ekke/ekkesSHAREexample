@@ -275,6 +275,27 @@ ApplicationWindow {
         pageView.result = "No App found"
         pageSend.result = "No App found"
     }
+    function onShareError(requestCode, message) {
+        console.log ("share error: "+ requestCode + " / " + message)
+        if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
+            pageView.result = "(View File) " + message
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
+            pageEdit.result = "(Edit File) " + message
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
+            pageSend.result = "(Send File) " + message
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        pageEdit.result = message
+        pageView.result = message
+        pageSend.result = message
+    }
 
     function copyFileFromAppDataIntoDocuments(requestId) {
         return myApp.filePathDocumentsLocation(requestId)
@@ -301,5 +322,9 @@ ApplicationWindow {
     Connections {
         target: shareUtils
         onShareNoAppAvailable: appWindow.onShareNoAppAvailable(requestCode)
+    }
+    Connections {
+        target: shareUtils
+        onShareError: appWindow.onShareError(requestCode, message)
     }
 }
