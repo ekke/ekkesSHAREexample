@@ -32,6 +32,9 @@ ShareUtils::ShareUtils(QObject *parent)
     connectResult = connect(mPlatformShareUtils, &PlatformShareUtils::shareNoAppAvailable, this, &ShareUtils::onShareNoAppAvailable);
     Q_ASSERT(connectResult);
 
+    connectResult = connect(mPlatformShareUtils, &PlatformShareUtils::shareError, this, &ShareUtils::onShareError);
+    Q_ASSERT(connectResult);
+
     Q_UNUSED(connectResult);
 }
 
@@ -68,5 +71,10 @@ void ShareUtils::onShareFinished(int requestCode)
 void ShareUtils::onShareNoAppAvailable(int requestCode)
 {
     emit shareNoAppAvailable(requestCode);
+}
+
+void ShareUtils::onShareError(int requestCode, QString message)
+{
+    emit shareError(requestCode, message);
 }
 
