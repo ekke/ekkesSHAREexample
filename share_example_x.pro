@@ -69,8 +69,6 @@ ios {
     HEADERS += cpp/ios/iosshareutils.hpp \
     cpp/ios/docviewcontroller.hpp
 
-    OTHER_FILES += ios/src/*.mm
-
     QMAKE_IOS_DEPLOYMENT_TARGET = 8.2
 
     disable_warning.name = GCC_WARN_64_TO_32_BIT_CONVERSION
