@@ -21,10 +21,14 @@ void AndroidShareUtils::share(const QString &text, const QUrl &url)
 {
     QAndroidJniObject jsText = QAndroidJniObject::fromString(text);
     QAndroidJniObject jsUrl = QAndroidJniObject::fromString(url.toString());
-    QAndroidJniObject::callStaticMethod<void>("org/ekkescorner/utils/QShareUtils",
+    jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                               "share",
-                                              "(Ljava/lang/String;Ljava/lang/String;)V",
+                                              "(Ljava/lang/String;Ljava/lang/String;)Z",
                                               jsText.object<jstring>(), jsUrl.object<jstring>());
+
+    if(!ok) {
+        qWarning() << "Unable to resolve activity from Java";
+    }
 }
 
 /*
@@ -37,10 +41,13 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
-        QAndroidJniObject::callStaticMethod<void>("org/ekkescorner/utils/QShareUtils",
+        jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "sendFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
                                                   jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+        if(!ok) {
+            qWarning() << "Unable to resolve activity from Java";
+        }
         return;
     }
     // THE FILE PATH
@@ -134,10 +141,13 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
-        QAndroidJniObject::callStaticMethod<void>("org/ekkescorner/utils/QShareUtils",
+        jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "viewFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
                                                   jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+        if(!ok) {
+            qWarning() << "Unable to resolve activity from Java";
+        }
         return;
     }
 
@@ -217,10 +227,15 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
-        QAndroidJniObject::callStaticMethod<void>("org/ekkescorner/utils/QShareUtils",
+
+        jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "editFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V",
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
                                                   jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+
+        if(!ok) {
+            qWarning() << "Unable to resolve activity from Java";
+        }
         return;
     }
 

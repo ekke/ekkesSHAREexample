@@ -30,9 +30,9 @@ public class QShareUtils
        //Log.d("ekkescorner", "QShareUtils()");
     }
 
-    public static void share(String text, String url) {
+    public static boolean share(String text, String url) {
         if (QtNative.activity() == null)
-            return;
+            return false;
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, text + " " + url);
@@ -41,14 +41,16 @@ public class QShareUtils
         // Verify that the intent will resolve to an activity
         if (sendIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
             QtNative.activity().startActivity(sendIntent);
+            return true;
         } else {
             Log.d("ekkescorner share", "Intent not resolved");
         }
+        return false;
     }
 
-    public static void sendFile(String filePath, String title, String mimeType) {
+    public static boolean sendFile(String filePath, String title, String mimeType) {
         if (QtNative.activity() == null)
-            return;
+            return false;
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
 
@@ -65,14 +67,16 @@ public class QShareUtils
         // Verify that the intent will resolve to an activity
         if (sendIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
             QtNative.activity().startActivity(Intent.createChooser(sendIntent, title));
+            return true;
         } else {
             Log.d("ekkescorner sendFile", "Intent not resolved");
         }
+        return false;
     }
 
-    public static void viewFile(String filePath, String title, String mimeType) {
+    public static boolean viewFile(String filePath, String title, String mimeType) {
         if (QtNative.activity() == null)
-            return;
+            return false;
         Intent viewIntent = new Intent();
         viewIntent.setAction(Intent.ACTION_VIEW);
 
@@ -87,14 +91,16 @@ public class QShareUtils
         // Verify that the intent will resolve to an activity
         if (viewIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
             QtNative.activity().startActivity(Intent.createChooser(viewIntent, title));
+            return true;
         } else {
             Log.d("ekkescorner viewFile", "Intent not resolved");
         }
+        return false;
     }
 
-    public static void editFile(String filePath, String title, String mimeType) {
+    public static boolean editFile(String filePath, String title, String mimeType) {
         if (QtNative.activity() == null)
-            return;
+            return false;
         Intent editIntent = new Intent();
         editIntent.setAction(Intent.ACTION_EDIT);
 
@@ -109,9 +115,11 @@ public class QShareUtils
         // Verify that the intent will resolve to an activity
         if (editIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
             QtNative.activity().startActivityForResult(Intent.createChooser(editIntent, title), EDIT_FILE);
+            return true;
         } else {
             Log.d("ekkescorner editFile", "Intent not resolved");
         }
+        return false;
     }
 
 }
