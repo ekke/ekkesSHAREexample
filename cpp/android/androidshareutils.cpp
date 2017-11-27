@@ -28,6 +28,7 @@ void AndroidShareUtils::share(const QString &text, const QUrl &url)
 
     if(!ok) {
         qWarning() << "Unable to resolve activity from Java";
+        emit shareNoAppAvailable(0);
     }
 }
 
@@ -47,6 +48,7 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
                                                   jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
+            emit shareNoAppAvailable(requestId);
         }
         return;
     }
@@ -122,6 +124,7 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
                                                               packageManager.object());
     if (!componentName.isValid()) {
         qWarning() << "Unable to resolve activity";
+        emit shareNoAppAvailable(requestId);
         return;
     }
 
@@ -147,6 +150,7 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
                                                   jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
+            emit shareNoAppAvailable(requestId);
         }
         return;
     }
@@ -208,6 +212,7 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
                                                               packageManager.object());
     if (!componentName.isValid()) {
         qWarning() << "Unable to resolve activity";
+        emit shareNoAppAvailable(requestId);
         return;
     }
 
@@ -235,6 +240,7 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
 
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
+            emit shareNoAppAvailable(requestId);
         }
         return;
     }
@@ -296,6 +302,7 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
                                                               packageManager.object());
     if (!componentName.isValid()) {
         qWarning() << "Unable to resolve activity";
+        emit shareNoAppAvailable(requestId);
         return;
     }
 
