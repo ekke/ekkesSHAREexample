@@ -59,12 +59,14 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniPath = QAndroidJniObject::fromString("file://"+filePath);
     if(!jniPath.isValid()) {
         qWarning() << "QAndroidJniObject jniPath not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nFilePath not valid"));
         return;
     }
     // next step: convert filePath Java String into Java Uri
     QAndroidJniObject jniUri = QAndroidJniObject::callStaticObjectMethod("android/net/Uri", "parse", "(Ljava/lang/String;)Landroid/net/Uri;", jniPath.object<jstring>());
     if(!jniUri.isValid()) {
         qWarning() << "QAndroidJniObject jniUri not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nURI not valid"));
         return;
     }
 
@@ -73,31 +75,35 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniAction = QAndroidJniObject::getStaticObjectField<jstring>("android/content/Intent", "ACTION_SEND");
     if(!jniAction.isValid()) {
         qWarning() << "QAndroidJniObject jniParam not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
     // then create the Intent Object for this Action
     QAndroidJniObject jniIntent("android/content/Intent","(Ljava/lang/String;)V",jniAction.object<jstring>());
     if(!jniIntent.isValid()) {
         qWarning() << "QAndroidJniObject jniIntent not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
     // THE MIME TYPE
     if(mimeType.isEmpty()) {
-        // attention: with an empty MimeType the APP will crash with a JNI Error !
         qWarning() << "mime type is empty";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType is empty"));
         return;
     }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniMimeType = QAndroidJniObject::fromString(mimeType);
     if(!jniMimeType.isValid()) {
         qWarning() << "QAndroidJniObject jniMimeType not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType not valid"));
         return;
     }
     // set Type (MimeType)
     QAndroidJniObject jniType = jniIntent.callObjectMethod("setType", "(Ljava/lang/String;)Landroid/content/Intent;", jniMimeType.object<jstring>());
     if(!jniType.isValid()) {
         qWarning() << "QAndroidJniObject jniType not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
@@ -106,6 +112,7 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniExtra = QAndroidJniObject::getStaticObjectField<jstring>("android/content/Intent", "EXTRA_STREAM");
     if(!jniExtra.isValid()) {
         qWarning() << "QAndroidJniObject jniExtra not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
     // put Extra (EXTRA_STREAM and URI)
@@ -113,6 +120,7 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
     // QAndroidJniObject jniExtraStreamUri = jniIntent.callObjectMethod("putExtra", "(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;", jniExtra.object<jstring>(), jniExtra.object<jstring>());
     if(!jniExtraStreamUri.isValid()) {
         qWarning() << "QAndroidJniObject jniExtraStreamUri not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
@@ -162,12 +170,14 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniPath = QAndroidJniObject::fromString("file://"+filePath);
     if(!jniPath.isValid()) {
         qWarning() << "QAndroidJniObject jniPath not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nFilePath not valid"));
         return;
     }
     // next step: convert filePath Java String into Java Uri
     QAndroidJniObject jniUri = QAndroidJniObject::callStaticObjectMethod("android/net/Uri", "parse", "(Ljava/lang/String;)Landroid/net/Uri;", jniPath.object<jstring>());
     if(!jniUri.isValid()) {
         qWarning() << "QAndroidJniObject jniUri not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nURI not valid"));
         return;
     }
 
@@ -176,31 +186,35 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniParam = QAndroidJniObject::getStaticObjectField<jstring>("android/content/Intent", "ACTION_VIEW");
     if(!jniParam.isValid()) {
         qWarning() << "QAndroidJniObject jniParam not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
     // then create the Intent Object for this Action
     QAndroidJniObject jniIntent("android/content/Intent","(Ljava/lang/String;)V",jniParam.object<jstring>());
     if(!jniIntent.isValid()) {
         qWarning() << "QAndroidJniObject jniIntent not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
     // THE FILE TYPE
     if(mimeType.isEmpty()) {
-        // attention: with an empty MimeType the APP will crash with a JNI Error !
         qWarning() << "mime type is empty";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType is empty"));
         return;
     }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniType = QAndroidJniObject::fromString(mimeType);
     if(!jniType.isValid()) {
         qWarning() << "QAndroidJniObject jniType not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType not valid"));
         return;
     }
     // set Data (the URI) and Type (MimeType)
     QAndroidJniObject jniResult = jniIntent.callObjectMethod("setDataAndType", "(Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;", jniUri.object<jobject>(), jniType.object<jstring>());
     if(!jniResult.isValid()) {
         qWarning() << "QAndroidJniObject jniResult not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
@@ -252,12 +266,14 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniPath = QAndroidJniObject::fromString("file://"+filePath);
     if(!jniPath.isValid()) {
         qWarning() << "QAndroidJniObject jniPath not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nFilePath not valid"));
         return;
     }
     // next step: convert filePath Java String into Java Uri
     QAndroidJniObject jniUri = QAndroidJniObject::callStaticObjectMethod("android/net/Uri", "parse", "(Ljava/lang/String;)Landroid/net/Uri;", jniPath.object<jstring>());
     if(!jniUri.isValid()) {
         qWarning() << "QAndroidJniObject jniUri not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nURI not valid"));
         return;
     }
 
@@ -266,31 +282,35 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
     QAndroidJniObject jniParam = QAndroidJniObject::getStaticObjectField<jstring>("android/content/Intent", "ACTION_EDIT");
     if(!jniParam.isValid()) {
         qWarning() << "QAndroidJniObject jniParam not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
     // then create the Intent Object for this Action
     QAndroidJniObject jniIntent("android/content/Intent","(Ljava/lang/String;)V",jniParam.object<jstring>());
     if(!jniIntent.isValid()) {
         qWarning() << "QAndroidJniObject jniIntent not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
     // THE FILE TYPE
     if(mimeType.isEmpty()) {
-        // attention: with an empty MimeType the APP will crash with a JNI Error !
         qWarning() << "mime type is empty";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType is empty"));
         return;
     }
     // create a Java String for the File Type (Mime Type)
     QAndroidJniObject jniType = QAndroidJniObject::fromString(mimeType);
     if(!jniType.isValid()) {
         qWarning() << "QAndroidJniObject jniType not valid.";
+        emit shareError(requestId, tr("Share: an Error occured\nMimeType not valid"));
         return;
     }
     // set Data (the URI) and Type (MimeType)
     QAndroidJniObject jniResult = jniIntent.callObjectMethod("setDataAndType", "(Landroid/net/Uri;Ljava/lang/String;)Landroid/content/Intent;", jniUri.object<jobject>(), jniType.object<jstring>());
     if(!jniResult.isValid()) {
         qWarning() << "QAndroidJniObject jniResult not valid.";
+        emit shareError(requestId, tr("Share: an Error occured"));
         return;
     }
 
@@ -323,5 +343,6 @@ void AndroidShareUtils::handleActivityResult(int receiverRequestCode, int result
         emit shareFinished(receiverRequestCode);
     } else {
         qDebug() << "wrong result code: " << resultCode << " from request: " << receiverRequestCode;
+        emit shareError(receiverRequestCode, tr("Share: an Error occured"));
     }
 }
