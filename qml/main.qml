@@ -31,6 +31,7 @@ ApplicationWindow {
             id: pageTextUrl
             property alias result: textResult.text
             Button {
+                id: shareButton
                 text: qsTr("Share Text and Url")
                 anchors.centerIn: parent
                 onClicked: {
@@ -40,7 +41,7 @@ ApplicationWindow {
             Label {
                 id: textResult
                 text: ""
-                anchors.top: parent.top
+                anchors.top: shareButton.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
@@ -60,6 +61,16 @@ ApplicationWindow {
                 id: sendButton
                 text: qsTr("Send File")
                 onClicked: {
+                    sendResult.text = ""
+                    if(Qt.platform.os === "android") {
+                        // if not using a RequestId we must know when Intent was finished
+                        // on Android we can do this by checking the ApplicationState
+                        if(sendSwitch.checked) {
+                            myApp.setShareState(true, false, request_SEND_FILE_PDF)
+                        } else {
+                            myApp.setShareState(true, false, request_SEND_FILE_IMAGE)
+                        }
+                    }
                     if(sendSwitch.checked) {
                         shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Send File", "application/pdf", request_NO_RESPONSE_PDF)
                     } else {
@@ -109,6 +120,15 @@ ApplicationWindow {
                 text: qsTr("View File")
                 onClicked: {
                     viewResult.text = ""
+                    if(Qt.platform.os === "android") {
+                        // if not using a RequestId we must know when Intent was finished
+                        // on Android we can do this by checking the ApplicationState
+                        if(viewSwitch.checkable) {
+                            myApp.setShareState(true, false, request_VIEW_FILE_PDF)
+                        } else {
+                            myApp.setShareState(true, false, request_VIEW_FILE_IMAGE)
+                        }
+                    }
                     if(viewSwitch.checked) {
                         shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "View File", "application/pdf", request_NO_RESPONSE_PDF)
                     } else {
@@ -158,6 +178,15 @@ ApplicationWindow {
                 text: qsTr("Edit File")
                 onClicked: {
                     editResult.text = ""
+                    if(Qt.platform.os === "android") {
+                        // if not using a RequestId we must know when Edit was finished
+                        // on Android we can do this by checking the ApplicationState
+                        if(editSwitch.checked) {
+                            myApp.setShareState(true, true, request_EDIT_FILE_PDF)
+                        } else {
+                            myApp.setShareState(true, true, request_EDIT_FILE_IMAGE)
+                        }
+                    }
                     if(editSwitch.checked) {
                         shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Edit File", "application/pdf", request_NO_RESPONSE_PDF)
                     } else {
@@ -214,21 +243,11 @@ ApplicationWindow {
 
     function onShareEditDone(requestCode) {
         console.log ("share done: "+ requestCode)
-//        if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
-//            pageView.result = "View Done"
-//            requestCanceledOrViewDoneOrSendDone(requestCode)
-//            return
-//        }
         if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
             pageEdit.result = "Edit Done"
             requestEditDone(requestCode)
             return
         }
-//        if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
-//            pageSend.result = "Sending File Done"
-//            requestCanceledOrViewDoneOrSendDone(requestCode)
-//            return
-//        }
         pageEdit.result = "Done"
         pageView.result = "Done"
         pageSend.result = "Done"

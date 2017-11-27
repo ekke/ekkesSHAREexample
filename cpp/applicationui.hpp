@@ -30,15 +30,28 @@ public:
 
      Q_INVOKABLE
      bool updateFileFromDocumentsLocation(const int requestId);
+
+     // only used on Android and when not dealing with QAndroidActivityResultReceiver
+     Q_INVOKABLE
+     void setShareState(const bool isShareActive, const bool isEditActive, const int requestCode);
+
 signals:
 
 public slots:
+#if defined(Q_OS_ANDROID)
+     void onApplicationStateChanged(Qt::ApplicationState applicationState);
+#endif
 
 private:
      ShareUtils* mShareUtils;
 
      QString mAppDataFilesPath;
      QString mDocumentsWorkPath;
+
+     // only used on Android and when not dealing with QAndroidActivityResultReceiver
+     bool mShareActive;
+     bool mShareEditActive;
+     int mShareRequestCode;
 
      bool copyAssetFile(const QString sourceFilePath, const QString destinationFilePath);
 };
