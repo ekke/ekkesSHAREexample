@@ -229,7 +229,9 @@ ApplicationWindow {
 //            requestCanceledOrViewDoneOrSendDone(requestCode)
 //            return
 //        }
-        pageEdit.result = "Unknown Done"
+        pageEdit.result = "Done"
+        pageView.result = "Done"
+        pageSend.result = "Done"
     }
     function onShareFinished(requestCode) {
         console.log ("share canceled: "+ requestCode)
@@ -248,7 +250,30 @@ ApplicationWindow {
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
-        pageEdit.result = "Unknown canceled"
+        pageEdit.result = "canceled"
+        pageView.result = "canceled"
+        pageSend.result = "canceled"
+    }
+    function onShareNoAppAvailable(requestCode) {
+        console.log ("share no App available: "+ requestCode)
+        if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
+            pageView.result = "No App found (View File)"
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
+            pageEdit.result = "No App found (Edit File)"
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
+            pageSend.result = "No App found (Send File)"
+            requestCanceledOrViewDoneOrSendDone(requestCode)
+            return
+        }
+        pageEdit.result = "No App found"
+        pageView.result = "No App found"
+        pageSend.result = "No App found"
     }
 
     function copyFileFromAppDataIntoDocuments(requestId) {
@@ -256,6 +281,7 @@ ApplicationWindow {
     }
 
     // we must delete file from DOCUMENTS
+    // edit canceled, view done, send done or no matching app found
     function requestCanceledOrViewDoneOrSendDone(requestId) {
         myApp.deleteFromDocumentsLocation(requestId)
     }
@@ -271,5 +297,9 @@ ApplicationWindow {
     Connections {
         target: shareUtils
         onShareFinished: appWindow.onShareFinished(requestCode)
+    }
+    Connections {
+        target: shareUtils
+        onShareNoAppAvailable: appWindow.onShareNoAppAvailable(requestCode)
     }
 }
