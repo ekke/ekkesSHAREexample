@@ -55,8 +55,6 @@ void IosShareUtils::share(const QString &text, const QUrl &url) {
 void IosShareUtils::sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
 #pragma unused (title, mimeType)
 
-    mCurrentRequestId = requestId;
-
     NSString* nsFilePath = filePath.toNSString();
     NSURL *nsFileUrl = [NSURL fileURLWithPath:nsFilePath];
 
@@ -76,6 +74,9 @@ void IosShareUtils::sendFile(const QString &filePath, const QString &title, cons
         docViewController = [[DocViewController alloc] init];
 
         docViewController.requestId = requestId;
+        // we need this to be able to execute handleDocumentPreviewDone() method,
+        // when preview was finished
+        docViewController.mIosShareUtils = this;
 
         [qtUIViewController addChildViewController:docViewController];
         documentInteractionController.delegate = docViewController;
@@ -87,71 +88,20 @@ void IosShareUtils::sendFile(const QString &filePath, const QString &title, cons
 void IosShareUtils::viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
 #pragma unused (title, mimeType)
 
-    mCurrentRequestId = requestId;
-
-    NSString* nsFilePath = filePath.toNSString();
-    NSURL *nsFileUrl = [NSURL fileURLWithPath:nsFilePath];
-
-    static DocViewController* docViewController = nil;
-    if(docViewController!=nil)
-    {
-        [docViewController removeFromParentViewController];
-        [docViewController release];
-    }
-
-    UIDocumentInteractionController* documentInteractionController = nil;
-    documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:nsFileUrl];
-
-    UIViewController* qtUIViewController = [[[[UIApplication sharedApplication]windows] firstObject]rootViewController];
-    if(qtUIViewController!=nil)
-    {
-        docViewController = [[DocViewController alloc] init];
-
-        docViewController.requestId = requestId;
-
-        [qtUIViewController addChildViewController:docViewController];
-        documentInteractionController.delegate = docViewController;
-        [documentInteractionController presentPreviewAnimated:YES];
-    }
+    sendFile(filePath, title, mimeType, requestId);
 }
 
 void IosShareUtils::editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
 #pragma unused (title, mimeType)
 
-    mCurrentRequestId = requestId;
-
-    NSString* nsFilePath = filePath.toNSString();
-    NSURL *nsFileUrl = [NSURL fileURLWithPath:nsFilePath];
-
-    static DocViewController* docViewController = nil;
-    if(docViewController!=nil)
-    {
-        [docViewController removeFromParentViewController];
-        [docViewController release];
-    }
-
-    UIDocumentInteractionController* documentInteractionController = nil;
-    documentInteractionController = [UIDocumentInteractionController interactionControllerWithURL:nsFileUrl];
-
-    UIViewController* qtUIViewController = [[[[UIApplication sharedApplication]windows] firstObject]rootViewController];
-    if(qtUIViewController!=nil)
-    {
-        docViewController = [[DocViewController alloc] init];
-
-        docViewController.requestId = requestId;
-
-        [qtUIViewController addChildViewController:docViewController];
-        documentInteractionController.delegate = docViewController;
-        [documentInteractionController presentPreviewAnimated:YES];
-    }
+    sendFile(filePath, title, mimeType, requestId);
 }
 
-void IosShareUtils::handleDocumentPreviewDone()
+void IosShareUtils::handleDocumentPreviewDone(const int &requestId)
 {
-    // TODO HowTo know about
     // documentInteractionControllerDidEndPreview
-    qDebug() << "handleShareDone: " << mCurrentRequestId;
-    emit shareFinished(mCurrentRequestId);
+    qDebug() << "handleShareDone: " << requestId;
+    emit shareFinished(requestId);
 }
 
 

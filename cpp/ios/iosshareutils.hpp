@@ -20,10 +20,8 @@ public:
     void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
     void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
 
-    void handleDocumentPreviewDone();
+    void handleDocumentPreviewDone(const int &requestId);
 
-private:
-    int mCurrentRequestId;
 };
 
 #endif
