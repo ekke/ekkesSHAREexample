@@ -30,6 +30,44 @@ public class QShareUtils
        //Log.d("ekkescorner", "QShareUtils()");
     }
 
+    public static boolean checkMimeTypeView(String mimeType) {
+        if (QtNative.activity() == null)
+            return false;
+        Intent myIntent = new Intent();
+        myIntent.setAction(Intent.ACTION_VIEW);
+        File fileToShare = new File("");
+        Uri uri = Uri.fromFile(fileToShare);
+        myIntent.setDataAndType(uri, mimeType);
+
+        // Verify that the intent will resolve to an activity
+        if (myIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            Log.d("ekkescorner checkMime ", "YEP - we can go on and View");
+            return true;
+        } else {
+            Log.d("ekkescorner checkMime", "sorry - no App available to View");
+        }
+        return false;
+    }
+
+    public static boolean checkMimeTypeEdit(String mimeType) {
+        if (QtNative.activity() == null)
+            return false;
+        Intent myIntent = new Intent();
+        myIntent.setAction(Intent.ACTION_EDIT);
+        File fileToShare = new File("");
+        Uri uri = Uri.fromFile(fileToShare);
+        myIntent.setDataAndType(uri, mimeType);
+
+        // Verify that the intent will resolve to an activity
+        if (myIntent.resolveActivity(QtNative.activity().getPackageManager()) != null) {
+            Log.d("ekkescorner checkMime ", "YEP - we can go on and Edit");
+            return true;
+        } else {
+            Log.d("ekkescorner checkMime", "sorry - no App available to Edit");
+        }
+        return false;
+    }
+
     public static boolean share(String text, String url) {
         if (QtNative.activity() == null)
             return false;
