@@ -146,6 +146,12 @@ QString ApplicationUI::filePathDocumentsLocation(const int requestId) {
     bool copied = QFile::copy(sourceFilePath, destinationFilePath);
     if(!copied) {
         qWarning() << "Failed to copy " << sourceFilePath << " to " << destinationFilePath;
+        // on Android probably missing Permission
+        // not handled in this App !
+        // you must set permission manually
+#if defined(Q_OS_ANDROID)
+        emit noDocumentsWorkLocation();
+#endif
     }
     return destinationFilePath;
 }

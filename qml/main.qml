@@ -365,6 +365,38 @@ ApplicationWindow {
         myApp.updateFileFromDocumentsLocation(requestId)
     }
 
+    function onNoDocumentsWorkLocation() {
+        popup.open()
+    }
+    Popup {
+        id: popup
+        closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
+        x: 16
+        y: 16
+        implicitHeight: 160
+        implicitWidth: appWindow.width * .9
+        Column {
+            anchors.right: parent.right
+            anchors.left: parent.left
+            spacing: 20
+            Label {
+                id: popupLabel
+                topPadding: 8
+                leftPadding: 8
+                rightPadding: 24
+                text: qsTr("Cannot copy to Documents work folder\nPlease check permissions\nThen restart the App")
+                wrapMode: Text.WordWrap
+            }
+            Button {
+                id: okButton
+                text: "OK"
+                onClicked: {
+                    popup.close()
+                }
+            } // okButton
+        } // row button
+    } // popup
+
     Connections {
         target: shareUtils
         onShareEditDone: appWindow.onShareEditDone(requestCode)
@@ -380,5 +412,11 @@ ApplicationWindow {
     Connections {
         target: shareUtils
         onShareError: appWindow.onShareError(requestCode, message)
+    }
+
+    // noDocumentsWorkLocation
+    Connections {
+        target: myApp
+        onNoDocumentsWorkLocation: appWindow.onNoDocumentsWorkLocation()
     }
 }

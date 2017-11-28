@@ -36,6 +36,7 @@ public:
      void setShareState(const bool isShareActive, const bool isEditActive, const int requestCode);
 
 signals:
+     void noDocumentsWorkLocation();
 
 public slots:
 #if defined(Q_OS_ANDROID)
