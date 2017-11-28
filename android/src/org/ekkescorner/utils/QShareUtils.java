@@ -23,6 +23,7 @@ import android.util.Log;
 
 public class QShareUtils
 {
+    // dummi
     static final int EDIT_FILE = 42;  // The request code
 
     protected QShareUtils()
@@ -35,6 +36,8 @@ public class QShareUtils
             return false;
         Intent myIntent = new Intent();
         myIntent.setAction(Intent.ACTION_VIEW);
+        // without an URI resolve always fails
+        // an empty URI allows to resolve the Activity
         File fileToShare = new File("");
         Uri uri = Uri.fromFile(fileToShare);
         myIntent.setDataAndType(uri, mimeType);
@@ -54,6 +57,8 @@ public class QShareUtils
             return false;
         Intent myIntent = new Intent();
         myIntent.setAction(Intent.ACTION_EDIT);
+        // without an URI resolve always fails
+        // an empty URI allows to resolve the Activity
         File fileToShare = new File("");
         Uri uri = Uri.fromFile(fileToShare);
         myIntent.setDataAndType(uri, mimeType);
