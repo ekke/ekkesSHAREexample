@@ -14,6 +14,8 @@ class AndroidShareUtils : public PlatformShareUtils, public QAndroidActivityResu
 {
 public:
     AndroidShareUtils(QObject* parent = 0);
+    bool checkMimeTypeView(const QString &mimeType);
+    bool checkMimeTypeEdit(const QString &mimeType);
     void share(const QString &text, const QUrl &url) override;
     void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) override;
     void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) override;

@@ -17,6 +17,28 @@ AndroidShareUtils::AndroidShareUtils(QObject* parent) : PlatformShareUtils(paren
     //
 }
 
+bool AndroidShareUtils::checkMimeTypeView(const QString &mimeType)
+{
+    QAndroidJniObject jsMime = QAndroidJniObject::fromString(mimeType);
+    jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
+                                              "checkMimeTypeView",
+                                              "(Ljava/lang/String;)Z",
+                                              jsMime.object<jstring>());
+    qDebug() << "View VERIFIED: " << mimeType << " - " << verified;
+    return verified;
+}
+
+bool AndroidShareUtils::checkMimeTypeEdit(const QString &mimeType)
+{
+    QAndroidJniObject jsMime = QAndroidJniObject::fromString(mimeType);
+    jboolean verified = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
+                                                  "checkMimeTypeEdit",
+                                                  "(Ljava/lang/String;)Z",
+                                                  jsMime.object<jstring>());
+    qDebug() << "Edit VERIFIED: " << mimeType << " - " << verified;
+    return verified;
+}
+
 void AndroidShareUtils::share(const QString &text, const QUrl &url)
 {
     QAndroidJniObject jsText = QAndroidJniObject::fromString(text);

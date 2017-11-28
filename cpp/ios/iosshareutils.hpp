@@ -13,10 +13,12 @@ class IosShareUtils : public PlatformShareUtils
 
 public:
     explicit IosShareUtils(QObject *parent = 0);
-    Q_INVOKABLE void share(const QString &text, const QUrl &url);
-    Q_INVOKABLE void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    Q_INVOKABLE void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    Q_INVOKABLE void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    bool checkMimeTypeView(const QString &mimeType);
+    bool checkMimeTypeEdit(const QString &mimeType);
+    void share(const QString &text, const QUrl &url);
+    void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
 
     void handleDocumentPreviewDone();
 

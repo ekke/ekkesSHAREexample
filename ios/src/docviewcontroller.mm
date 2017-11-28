@@ -24,6 +24,7 @@
 {
 #pragma unused (controller)
     qDebug() << "end preview";
+    qDebug() << "request id " << self.requestId;
 
     [self removeFromParentViewController];
 }

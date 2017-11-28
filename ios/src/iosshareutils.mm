@@ -14,7 +14,21 @@
 
 IosShareUtils::IosShareUtils(QObject *parent) : PlatformShareUtils(parent)
 {
+    //
+}
 
+bool IosShareUtils::checkMimeTypeView(const QString &mimeType) {
+#pragma unused (mimeType)
+    // dummi implementation on iOS
+    // MimeType not used yet
+    return true;
+}
+
+bool IosShareUtils::checkMimeTypeEdit(const QString &mimeType) {
+#pragma unused (mimeType)
+    // dummi implementation on iOS
+    // MimeType not used yet
+    return true;
 }
 
 void IosShareUtils::share(const QString &text, const QUrl &url) {
@@ -60,6 +74,9 @@ void IosShareUtils::sendFile(const QString &filePath, const QString &title, cons
     if(qtUIViewController!=nil)
     {
         docViewController = [[DocViewController alloc] init];
+
+        docViewController.requestId = requestId;
+
         [qtUIViewController addChildViewController:docViewController];
         documentInteractionController.delegate = docViewController;
         [documentInteractionController presentPreviewAnimated:YES];
@@ -89,6 +106,9 @@ void IosShareUtils::viewFile(const QString &filePath, const QString &title, cons
     if(qtUIViewController!=nil)
     {
         docViewController = [[DocViewController alloc] init];
+
+        docViewController.requestId = requestId;
+
         [qtUIViewController addChildViewController:docViewController];
         documentInteractionController.delegate = docViewController;
         [documentInteractionController presentPreviewAnimated:YES];
@@ -117,10 +137,12 @@ void IosShareUtils::editFile(const QString &filePath, const QString &title, cons
     if(qtUIViewController!=nil)
     {
         docViewController = [[DocViewController alloc] init];
+
+        docViewController.requestId = requestId;
+
         [qtUIViewController addChildViewController:docViewController];
         documentInteractionController.delegate = docViewController;
         [documentInteractionController presentPreviewAnimated:YES];
-        qDebug() << "documentInteractionController";
     }
 }
 

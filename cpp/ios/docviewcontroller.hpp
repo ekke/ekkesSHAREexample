@@ -7,6 +7,9 @@
 
 #import <UIKit/UIKit.h>
 @interface DocViewController : UIViewController <UIDocumentInteractionControllerDelegate>
+
+@property int requestId;
+
 @end
 
 

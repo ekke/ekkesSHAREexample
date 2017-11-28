@@ -38,6 +38,16 @@ ShareUtils::ShareUtils(QObject *parent)
     Q_UNUSED(connectResult);
 }
 
+bool ShareUtils::checkMimeTypeView(const QString &mimeType)
+{
+    return mPlatformShareUtils->checkMimeTypeView(mimeType);
+}
+
+bool ShareUtils::checkMimeTypeEdit(const QString &mimeType)
+{
+    return mPlatformShareUtils->checkMimeTypeEdit(mimeType);
+}
+
 void ShareUtils::share(const QString &text, const QUrl &url)
 {
     mPlatformShareUtils->share(text, url);

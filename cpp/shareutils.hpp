@@ -32,6 +32,12 @@ signals:
 public:
     PlatformShareUtils(QObject *parent = 0) : QObject(parent){}
     virtual ~PlatformShareUtils() {}
+    virtual bool checkMimeTypeView(const QString &mimeType){
+        qDebug() << "check view for " << mimeType;
+        return true;}
+    virtual bool checkMimeTypeEdit(const QString &mimeType){
+        qDebug() << "check edit for " << mimeType;
+        return true;}
     virtual void share(const QString &text, const QUrl &url){ qDebug() << text << url; }
     virtual void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId){
         qDebug() << filePath << " - " << title << "requestId " << requestId << " - " << mimeType; }
@@ -60,6 +66,8 @@ public slots:
 
 public:
     explicit ShareUtils(QObject *parent = 0);
+    Q_INVOKABLE bool checkMimeTypeView(const QString &mimeType);
+    Q_INVOKABLE bool checkMimeTypeEdit(const QString &mimeType);
     Q_INVOKABLE void share(const QString &text, const QUrl &url);
     Q_INVOKABLE void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
     Q_INVOKABLE void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);

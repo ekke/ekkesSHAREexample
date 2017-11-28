@@ -154,10 +154,28 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
+            Button {
+                id: viewButtonCheckMime
+                text: qsTr("Check MimeType for VIEW")
+                property string mimeType: viewSwitch.checked? "application/pdf" : "image/png"
+                onClicked: {
+                    viewResult.text = ""
+                    var verified = shareUtils.checkMimeTypeView(mimeType)
+                    if(verified) {
+                        viewResult.text = "success:\nApps available to View\n"+mimeType
+                    } else {
+                        viewResult.text = "sorry:\nNO Apps available to View\n"+mimeType
+                    }
+                }
+                anchors.top: viewButtonWResult.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 24
+            }
+
             Label {
                 id: viewResult
                 text: ""
-                anchors.top: viewButtonWResult.bottom
+                anchors.top: viewButtonCheckMime.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
@@ -213,10 +231,27 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
+            Button {
+                id: editButtonCheckMime
+                text: qsTr("Check MimeType for EDIT")
+                property string mimeType: editSwitch.checked? "application/pdf" : "image/png"
+                onClicked: {
+                    editResult.text = ""
+                    var verified = shareUtils.checkMimeTypeEdit(mimeType)
+                    if(verified) {
+                        editResult.text = "success:\nApps available to Edit\n"+mimeType
+                    } else {
+                        editResult.text = "sorry:\nNO Apps available to Edit\n"+mimeType
+                    }
+                }
+                anchors.top: editButtonWResult.bottom
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.topMargin: 24
+            }
             Label {
                 id: editResult
                 text: ""
-                anchors.top: editButtonWResult.bottom
+                anchors.top: editButtonCheckMime.bottom
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
