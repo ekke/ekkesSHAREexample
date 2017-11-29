@@ -6,7 +6,7 @@
 
 wait for tweet @ekkescorner
 
-This is an Example App demonstrating HowTo share Files with other Apps on Android and iOS.
+This is an Example App demonstrating HowTo share Files with other Apps on Android and iOS:
 
 !!! not production ready - only to give you some hints HowTo implement such features !!!
 
@@ -18,7 +18,7 @@ Here's an Overview about the workflows, per ex. Open a File from inside your App
 
 ![Overview](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/share_overview.png)
 
-To read more please t5ake a look at these blogs:
+To read more please take a look at these blogs:
 
 Qt: ... work in progress - stay tuned ...
 
