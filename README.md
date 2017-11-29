@@ -4,6 +4,8 @@
 
 ... work in progress - stay tuned ...
 
+PLEASE NO QUESTIONS BEFORE MY BLOG ARTICLE IS PUBLISHED
+
 wait for tweet @ekkescorner
 
 This is an Example App demonstrating HowTo share Files with other Apps on Android and iOS:
