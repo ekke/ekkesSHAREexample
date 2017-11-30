@@ -33,6 +33,8 @@ Qt: ... work in progress - stay tuned ...
 
 ekkes-corner: ... work in progress - stay tuned ...
 
+Hint: Don't forget to set the Permission WRITE_EXTERNAL_STORAGE on Android 6+
+
 
 
 
