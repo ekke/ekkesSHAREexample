@@ -36,12 +36,16 @@ Of course at the end you need the modified File and you must delete the copy fro
 
 ## Share (Open / Edit) or Print from QtQuickControls2 Apps
 
+### Android Chooser to Open in...
 ![Android Chooser to Open in ...](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/android_share_chooser.png)
 
+### Android Send Stream to Printer
 ![Android Send Stream to Printer](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/android_share_send_chooser.png)
 
+### iOS Preview Page
 ![iOS Preview](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_preview.png)
 
+### iOS Share with ...
 ![iOS Share](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_share.png)
 
 
