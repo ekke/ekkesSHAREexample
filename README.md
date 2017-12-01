@@ -2,15 +2,24 @@
 
 [AUTHOR ( ekke )](AUTHOR.md)
 
+This app is part of ekke's blog series about mobile x-platform development:
+http://j.mp/qt-x
+
+## License Information
+[see LICENSE ( The Unlicense )](LICENSE)
+
 ... work in progress - stay tuned ...
 
 PLEASE NO QUESTIONS BEFORE MY BLOG ARTICLE IS PUBLISHED
 
 wait for tweet @ekkescorner
 
-This is an Example App demonstrating HowTo share Files with other Apps on Android and iOS:
+## ekkes SHARE example
+This is not a real-life app - this app only demonstrates HowTo share Files with other Apps on Android and iOS
 
-!!! not production ready - only to give you some hints HowTo implement such features !!!
+!!! not production ready !!!
+
+!!! please set Permission WRITE_EXTERNAL_STORAGE on Android 6+ !!!
 
 On Android we're using Intents, on iOS UIDocumentInteractionController.
 
@@ -25,15 +34,24 @@ Of course at the end you need the modified File and you must delete the copy fro
 
 ![Files from AppData to Documents and back](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/file_flow.png)
 
+## Share (Open / Edit) or Print from QtQuickControls2 Apps
+
+![Android Chooser to Open in ...](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/android_share_chooser.png)
+
+![Android Send Stream to Printer](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/android_share_send_chooser.png)
+
+![iOS Preview](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_preview.png)
+
+![iOS Share](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_share.png)
 
 
+## More Infos
 To read more please take a look at these blogs:
 
 Qt: ... work in progress - stay tuned ...
 
 ekkes-corner: ... work in progress - stay tuned ...
 
-Hint: Don't forget to set the Permission WRITE_EXTERNAL_STORAGE on Android 6+
 
 
 
