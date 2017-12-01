@@ -8,12 +8,6 @@ http://j.mp/qt-x
 ## License Information
 [see LICENSE ( The Unlicense )](LICENSE)
 
-... work in progress - stay tuned ...
-
-PLEASE NO QUESTIONS BEFORE MY BLOG ARTICLE IS PUBLISHED
-
-wait for tweet @ekkescorner
-
 ## ekkes SHARE example
 This is not a real-life app - this app only demonstrates HowTo share Files with other Apps on Android and iOS
 
@@ -50,9 +44,11 @@ Of course at the end you need the modified File and you must delete the copy fro
 
 
 ## More Infos
+follow me @ekkescorner
+
 To read more please take a look at these blogs:
 
-Qt: ... work in progress - stay tuned ...
+Qt: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
 
 ekkes-corner: ... work in progress - stay tuned ...
 
