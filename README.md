@@ -18,6 +18,8 @@ This is not a real-life app - this app only demonstrates HowTo share Files with 
 On Android we're using Intents, on iOS UIDocumentInteractionController.
 
 Developed and tested on Android 6, Android 7, Android 8, iOS and Qt 5.9.1
+Android: Target SDK 23
+there are changes in Android 7: https://developer.android.com/about/versions/nougat/android-7.0-changes.html#sharing-files
 
 Here's an Overview about the workflows, per ex. Open a File from inside your App and edit in another App outside.
 
