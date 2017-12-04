@@ -5,6 +5,8 @@
 #include "androidshareutils.hpp"
 
 #include <QUrl>
+#include <QFileInfo>
+#include <QDateTime>
 
 #include <QtAndroidExtras/QAndroidJniObject>
 
@@ -74,6 +76,9 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
         }
         return;
     }
+
+    mIsEditMode = false;
+
     // THE FILE PATH
     // to get a valid Path we must prefix file://
     // attention file must be inside Users Documents folder !
@@ -185,6 +190,8 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
         return;
     }
 
+    mIsEditMode = false;
+
     // THE FILE PATH
     // to get a valid Path we must prefix file://
     // attention file must be inside Users Documents folder !
@@ -281,6 +288,12 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
         return;
     }
 
+    mIsEditMode = true;
+    mCurrentFilePath = filePath;
+    QFileInfo fileInfo = QFileInfo(mCurrentFilePath);
+    mLastModified = fileInfo.lastModified().toSecsSinceEpoch();
+    qDebug() << "LAST MODIFIED: " << mLastModified;
+
     // THE FILE PATH
     // to get a valid Path we must prefix file://
     // attention file must be inside Users Documents folder !
@@ -362,6 +375,20 @@ void AndroidShareUtils::handleActivityResult(int receiverRequestCode, int result
     if(resultCode == RESULT_OK) {
         emit shareEditDone(receiverRequestCode);
     } else if(resultCode == RESULT_CANCELED) {
+        if(mIsEditMode) {
+            // Attention: not all Apps will give you the correct ResultCode:
+            // Google Fotos will send OK if saved and CANCELED if canceled
+            // Some Apps always sends CANCELED even if you modified and Saved the File
+            // so you should check the modified Timestamp of the File to know if
+            // you should emit shareEditDone() or shareFinished() !!!
+            QFileInfo fileInfo = QFileInfo(mCurrentFilePath);
+            qint64 currentModified = fileInfo.lastModified().toSecsSinceEpoch();
+            qDebug() << "CURRENT MODIFIED: " << currentModified;
+            if(currentModified > mLastModified) {
+                emit shareEditDone(receiverRequestCode);
+                return;
+            }
+        }
         emit shareFinished(receiverRequestCode);
     } else {
         qDebug() << "wrong result code: " << resultCode << " from request: " << receiverRequestCode;

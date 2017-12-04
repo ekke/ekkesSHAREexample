@@ -23,6 +23,11 @@ public:
 
     void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data);
 
+private:
+    bool mIsEditMode;
+    qint64 mLastModified;
+    QString mCurrentFilePath;
+
 };
 
 
