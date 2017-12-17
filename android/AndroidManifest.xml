@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <manifest package="org.ekkescorner.examples.sharex" xmlns:android="http://schemas.android.com/apk/res/android" android:versionName="1.0" android:versionCode="1" android:installLocation="auto">
     <application android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="ekkes SHARE Example">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="ekkes SHARE Example" android:screenOrientation="unspecified" android:launchMode="singleTop">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation" android:name="org.ekkescorner.examples.sharex.QShareActivity" android:label="ekkes SHARE Example" android:screenOrientation="unspecified" android:launchMode="singleInstance" android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
@@ -57,6 +57,21 @@
                 -->
             <meta-data android:name="android.app.extract_android_style" android:value="full"/>
             <!-- extract android style -->
+
+            <!-- Handle shared incoming urls -->
+            <intent-filter>
+                <action android:name="android.intent.action.SEND"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="image/*"/>
+                <data android:scheme="file"/>
+                <data android:scheme="content"/>
+            </intent-filter>
+
     </activity>
 
     <!-- For adding service(s) please check: https://wiki.qt.io/AndroidServices -->
@@ -73,5 +88,7 @@
     <!-- The following comment will be replaced upon deployment with default features based on the dependencies of the application.
          Remove the comment if you do not require these default features. -->
     <!-- %%INSERT_FEATURES -->
+
+
 
 </manifest>

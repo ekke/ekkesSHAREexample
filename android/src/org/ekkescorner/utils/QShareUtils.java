@@ -19,6 +19,14 @@ import java.io.File;
 import android.net.Uri;
 import android.util.Log;
 
+import android.content.ContentResolver;
+import android.database.Cursor;
+import android.provider.MediaStore;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+
 
 
 public class QShareUtils
@@ -163,6 +171,53 @@ public class QShareUtils
             Log.d("ekkescorner editFile", "Intent not resolved");
         }
         return false;
+    }
+
+    public static String getContentName(ContentResolver cR, Uri uri) {
+      Cursor cursor = cR.query(uri, null, null, null, null);
+      cursor.moveToFirst();
+      int nameIndex = cursor
+          .getColumnIndex(MediaStore.MediaColumns.DISPLAY_NAME);
+      if (nameIndex >= 0) {
+        return cursor.getString(nameIndex);
+      } else {
+        return null;
+      }
+    }
+
+    public static String createFile(ContentResolver cR, Uri uri, String fileLocation) {
+        String filePath = null;
+        try {
+                InputStream iStream = cR.openInputStream(uri);
+                if (iStream != null) {
+                    String name = getContentName(cR, uri);
+                    if (name != null) {
+                        filePath = fileLocation + "/" + name;
+                        Log.d("ekkescorner ZZZZZ - create File", filePath);
+                        File f = new File(filePath);
+                        FileOutputStream tmp = new FileOutputStream(f);
+                        Log.d("ekkescorner ZZZZZ - create File", "new FileOutputStream");
+
+                        byte[] buffer = new byte[1024];
+                        while (iStream.read(buffer) > 0) {
+                            tmp.write(buffer);
+                        }
+                        tmp.close();
+                        iStream.close();
+                        return filePath;
+                    } // name
+                } // iStream
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                return filePath;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return filePath;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return filePath;
+            }
+        return filePath;
     }
 
 }

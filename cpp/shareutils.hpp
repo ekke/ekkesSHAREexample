@@ -28,6 +28,8 @@ signals:
     void shareFinished(int requestCode);
     void shareNoAppAvailable(int requestCode);
     void shareError(int requestCode, QString message);
+    void fileUrlReceived(QString url);
+    void fileReceivedAndSaved(QString url);
 
 public:
     PlatformShareUtils(QObject *parent = 0) : QObject(parent){}
@@ -45,6 +47,9 @@ public:
         qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType; }
     virtual void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId){
         qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType; }
+
+    virtual void checkPendingIntents(const QString workingDirPath){
+        qDebug() << "checkPendingIntents " << workingDirPath; }
 };
 
 class ShareUtils : public QObject
@@ -57,12 +62,16 @@ signals:
     void shareFinished(int requestCode);
     void shareNoAppAvailable(int requestCode);
     void shareError(int requestCode, QString message);
+    void fileUrlReceived(QString url);
+    void fileReceivedAndSaved(QString url);
 
 public slots:
     void onShareEditDone(int requestCode);
     void onShareFinished(int requestCode);
     void onShareNoAppAvailable(int requestCode);
     void onShareError(int requestCode, QString message);
+    void onFileUrlReceived(QString url);
+    void onFileReceivedAndSaved(QString url);
 
 public:
     explicit ShareUtils(QObject *parent = 0);
@@ -72,6 +81,7 @@ public:
     Q_INVOKABLE void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
     Q_INVOKABLE void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
     Q_INVOKABLE void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    Q_INVOKABLE void checkPendingIntents(const QString workingDirPath);
 
 private:
     PlatformShareUtils* mPlatformShareUtils;

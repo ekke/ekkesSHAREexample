@@ -45,6 +45,7 @@ public slots:
 
 private:
      ShareUtils* mShareUtils;
+     bool mPendingIntentsChecked;
 
      QString mAppDataFilesPath;
      QString mDocumentsWorkPath;

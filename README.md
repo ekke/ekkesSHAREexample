@@ -9,11 +9,17 @@ http://j.mp/qt-x
 [see LICENSE ( The Unlicense )](LICENSE)
 
 ## ekkes SHARE example
-This is not a real-life app - this app only demonstrates HowTo share Files with other Apps on Android and iOS
+This is not a real-life app - this app only demonstrates
+
+1. HowTo share Files from Qt Mobile App with other Apps on Android and iOS
+
+2. HowTo open Qt Mobile App from other Apps: the Android part is nearly done, iOS coming soon
 
 !!! not production ready !!!
 
 !!! please set Permission WRITE_EXTERNAL_STORAGE on Android 6+ !!!
+
+## 1. HowTo share Files from Qt Mobile App with other Apps on Android and iOS
 
 On Android we're using Intents, on iOS UIDocumentInteractionController.
 
@@ -44,6 +50,10 @@ Of course at the end you need the modified File and you must delete the copy fro
 ### iOS Share with ...
 ![iOS Share](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_share.png)
 
+
+## 2. HowTo open Qt Mobile App from other Apps: the Android part is nearly done, iOS coming soon
+
+...documentation work in progress ....
 
 ## More Infos
 follow me @ekkescorner

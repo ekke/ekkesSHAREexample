@@ -57,7 +57,9 @@ android {
 
     HEADERS += cpp/android/androidshareutils.hpp
 
-    OTHER_FILES += android/src/org/ekkescorner/utils/QShareUtils.java
+    OTHER_FILES += android/src/org/ekkescorner/utils/QShareUtils.java \
+        android/src/org/ekkescorner/examples/sharex/QShareActivity.java \
+        android/src/org/ekkescorner/utils/QSharePathResolver.java
 
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }

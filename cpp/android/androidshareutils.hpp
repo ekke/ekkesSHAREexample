@@ -23,10 +23,20 @@ public:
 
     void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data);
 
+    void checkPendingIntents(const QString workingDirPath);
+
+    static AndroidShareUtils* getInstance();
+
+public slots:
+    void setFileUrlReceived(const QString &url);
+    void setFileReceivedAndSaved(const QString &url);
+
 private:
     bool mIsEditMode;
     qint64 mLastModified;
     QString mCurrentFilePath;
+
+    static AndroidShareUtils* mInstance;
 
 };
 

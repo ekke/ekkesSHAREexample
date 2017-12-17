@@ -33,7 +33,9 @@ ApplicationWindow {
             Button {
                 id: shareButton
                 text: qsTr("Share Text and Url")
-                anchors.centerIn: parent
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 onClicked: {
                     shareUtils.share("Qt","http://qt.io")
                 }
@@ -45,6 +47,18 @@ ApplicationWindow {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: 24
             }
+            Image {
+                id: image0
+                anchors.top: parent.top
+                anchors.right: parent.right
+                sourceSize.width: 160
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        image0.source = ""
+                    }
+                }
+            }
         }
 
         Page {
@@ -54,7 +68,8 @@ ApplicationWindow {
                 id: sendSwitch
                 text: checked? "PDF" : "PNG"
                 anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -78,7 +93,8 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: sendSwitch.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -93,15 +109,29 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: sendButton.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Label {
                 id: sendResult
                 text: ""
                 anchors.top: sendButtonWResult.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
+            }
+            Image {
+                id: image1
+                anchors.top: parent.top
+                anchors.right: parent.right
+                sourceSize.width: 160
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        image1.source = ""
+                    }
+                }
             }
         }
 
@@ -112,7 +142,8 @@ ApplicationWindow {
                 id: viewSwitch
                 text: checked? "PDF" : "PNG"
                 anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -136,7 +167,8 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: viewSwitch.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -151,7 +183,8 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: viewButton.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -168,7 +201,8 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: viewButtonWResult.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
 
@@ -176,8 +210,21 @@ ApplicationWindow {
                 id: viewResult
                 text: ""
                 anchors.top: viewButtonCheckMime.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
+            }
+            Image {
+                id: image2
+                anchors.top: parent.top
+                anchors.right: parent.right
+                sourceSize.width: 160
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        image2.source = ""
+                    }
+                }
             }
         }
 
@@ -188,7 +235,8 @@ ApplicationWindow {
                 id: editSwitch
                 text: checked? "PDF" : "PNG"
                 anchors.top: parent.top
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -212,7 +260,8 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: editSwitch.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -228,7 +277,8 @@ ApplicationWindow {
 
                 }
                 anchors.top: editButton.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Button {
@@ -245,17 +295,30 @@ ApplicationWindow {
                     }
                 }
                 anchors.top: editButtonWResult.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
             Label {
                 id: editResult
                 text: ""
                 anchors.top: editButtonCheckMime.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.left: parent.left
+                anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
-
+            Image {
+                id: image3
+                anchors.top: parent.top
+                anchors.right: parent.right
+                sourceSize.width: 160
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        image3.source = ""
+                    }
+                }
+            }
         }
     }
 
@@ -368,6 +431,33 @@ ApplicationWindow {
     function onNoDocumentsWorkLocation() {
         popup.open()
     }
+
+    // simulates that you selected a destination directory where the File should be displayed / uploaded, ...
+    function onFileUrlReceived(url) {
+        console.log("QML: onFileUrlReceived "+url)
+        if(swipeView.currentIndex === 0) {
+            image0.source = "file://"+url
+            return
+        }
+        if(swipeView.currentIndex === 1) {
+            image1.source = "file://"+url
+            return
+        }
+        if(swipeView.currentIndex === 2) {
+            image2.source = "file://"+url
+            return
+        }
+        if(swipeView.currentIndex === 3) {
+            image3.source = "file://"+url
+            return
+        }
+
+    }
+
+    function onFileReceivedAndSaved(url) {
+        onFileUrlReceived(url)
+    }
+
     Popup {
         id: popup
         closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
@@ -418,5 +508,16 @@ ApplicationWindow {
     Connections {
         target: myApp
         onNoDocumentsWorkLocation: appWindow.onNoDocumentsWorkLocation()
+    }
+
+    // called from outside
+    Connections {
+        target: shareUtils
+        onFileUrlReceived: appWindow.onFileUrlReceived(url)
+    }
+
+    Connections {
+        target: shareUtils
+        onFileReceivedAndSaved: appWindow.onFileReceivedAndSaved(url)
     }
 }

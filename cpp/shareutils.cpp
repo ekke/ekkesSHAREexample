@@ -35,6 +35,12 @@ ShareUtils::ShareUtils(QObject *parent)
     connectResult = connect(mPlatformShareUtils, &PlatformShareUtils::shareError, this, &ShareUtils::onShareError);
     Q_ASSERT(connectResult);
 
+    connectResult = connect(mPlatformShareUtils, &PlatformShareUtils::fileUrlReceived, this, &ShareUtils::onFileUrlReceived);
+    Q_ASSERT(connectResult);
+
+    connectResult = connect(mPlatformShareUtils, &PlatformShareUtils::fileReceivedAndSaved, this, &ShareUtils::onFileReceivedAndSaved);
+    Q_ASSERT(connectResult);
+
     Q_UNUSED(connectResult);
 }
 
@@ -68,6 +74,11 @@ void ShareUtils::editFile(const QString &filePath, const QString &title, const Q
     mPlatformShareUtils->editFile(filePath, title, mimeType, requestId);
 }
 
+void ShareUtils::checkPendingIntents(const QString workingDirPath)
+{
+    mPlatformShareUtils->checkPendingIntents(workingDirPath);
+}
+
 void ShareUtils::onShareEditDone(int requestCode)
 {
     emit shareEditDone(requestCode);
@@ -86,5 +97,15 @@ void ShareUtils::onShareNoAppAvailable(int requestCode)
 void ShareUtils::onShareError(int requestCode, QString message)
 {
     emit shareError(requestCode, message);
+}
+
+void ShareUtils::onFileUrlReceived(QString url)
+{
+    emit fileUrlReceived(url);
+}
+
+void ShareUtils::onFileReceivedAndSaved(QString url)
+{
+    emit fileReceivedAndSaved(url);
 }
 

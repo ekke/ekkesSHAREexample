@@ -9,14 +9,27 @@
 #include <QDateTime>
 
 #include <QtAndroidExtras/QAndroidJniObject>
+#include <jni.h>
 
 const static int RESULT_OK = -1;
 const static int RESULT_CANCELED = 0;
 
+AndroidShareUtils* AndroidShareUtils::mInstance = NULL;
 
 AndroidShareUtils::AndroidShareUtils(QObject* parent) : PlatformShareUtils(parent)
 {
-    //
+    // we need the instance for JNI Call
+    mInstance = this;
+}
+
+AndroidShareUtils* AndroidShareUtils::getInstance()
+{
+    if (!mInstance) {
+        mInstance = new AndroidShareUtils;
+        qWarning() << "AndroidShareUtils should be instantiated !";
+    }
+
+    return mInstance;
 }
 
 bool AndroidShareUtils::checkMimeTypeView(const QString &mimeType)
@@ -395,3 +408,105 @@ void AndroidShareUtils::handleActivityResult(int receiverRequestCode, int result
         emit shareError(receiverRequestCode, tr("Share: an Error occured"));
     }
 }
+
+void AndroidShareUtils::checkPendingIntents(const QString workingDirPath)
+{
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    if(activity.isValid()) {
+        // create a Java String for the Working Dir Path
+        QAndroidJniObject jniWorkingDir = QAndroidJniObject::fromString(workingDirPath);
+        if(!jniWorkingDir.isValid()) {
+            qWarning() << "QAndroidJniObject jniWorkingDir not valid.";
+            emit shareError(0, tr("Share: an Error occured\nWorkingDir not valid"));
+            return;
+        }
+        activity.callMethod<void>("checkPendingIntents","(Ljava/lang/String;)V", jniWorkingDir.object<jstring>());
+        qDebug() << "checkPendingIntents: " << workingDirPath;
+        return;
+    }
+    qDebug() << "checkPendingIntents: Activity not valid";
+}
+
+void AndroidShareUtils::setFileUrlReceived(const QString &url)
+{
+    if(url.isEmpty()) {
+        qWarning() << "setFileUrlReceived: we got an empty URL";
+        emit shareError(0, tr("Empty URL received"));
+        return;
+    }
+    qDebug() << "AndroidShareUtils setFileUrlReceived: we got the File URL from JAVA: " << url;
+    QString myUrl;
+    if(url.startsWith("file://")) {
+        myUrl= url.right(url.length()-7);
+        qDebug() << "QFile needs this URL: " << myUrl;
+    } else {
+        myUrl= url;
+    }
+
+    // check if File exists
+    QFileInfo fileInfo = QFileInfo(myUrl);
+    if(fileInfo.exists()) {
+        emit fileUrlReceived(myUrl);
+    } else {
+        qDebug() << "setFileUrlReceived: FILE does NOT exist ";
+        emit shareError(0, tr("File does not exist: %1").arg(myUrl));
+    }
+}
+
+void AndroidShareUtils::setFileReceivedAndSaved(const QString &url)
+{
+    if(url.isEmpty()) {
+        qWarning() << "setFileReceivedAndSaved: we got an empty URL";
+        emit shareError(0, tr("Empty URL received"));
+        return;
+    }
+    qDebug() << "AndroidShareUtils setFileReceivedAndSaved: we got the File URL from JAVA: " << url;
+    QString myUrl;
+    if(url.startsWith("file://")) {
+        myUrl= url.right(url.length()-7);
+        qDebug() << "QFile needs this URL: " << myUrl;
+    } else {
+        myUrl= url;
+    }
+
+    // check if File exists
+    QFileInfo fileInfo = QFileInfo(myUrl);
+    if(fileInfo.exists()) {
+        emit fileReceivedAndSaved(myUrl);
+    } else {
+        qDebug() << "setFileReceivedAndSaved: FILE does NOT exist ";
+        emit shareError(0, tr("File does not exist: %1").arg(myUrl));
+    }
+}
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+JNIEXPORT void JNICALL
+  Java_org_ekkescorner_examples_sharex_QShareActivity_setFileUrlReceived(JNIEnv *env,
+                                        jobject obj,
+                                        jstring url)
+{
+    const char *urlStr = env->GetStringUTFChars(url, NULL);
+    Q_UNUSED (obj)
+    AndroidShareUtils::getInstance()->setFileUrlReceived(urlStr);
+    env->ReleaseStringUTFChars(url, urlStr);
+    return;
+}
+
+JNIEXPORT void JNICALL
+  Java_org_ekkescorner_examples_sharex_QShareActivity_setFileReceivedAndSaved(JNIEnv *env,
+                                        jobject obj,
+                                        jstring url)
+{
+    const char *urlStr = env->GetStringUTFChars(url, NULL);
+    Q_UNUSED (obj)
+    AndroidShareUtils::getInstance()->setFileReceivedAndSaved(urlStr);
+    env->ReleaseStringUTFChars(url, urlStr);
+    return;
+}
+
+#ifdef __cplusplus
+}
+#endif

@@ -251,6 +251,15 @@ void ApplicationUI::onApplicationStateChanged(Qt::ApplicationState applicationSt
             mShareEditActive = false;
             mShareActive = false;
             mShareRequestCode = 0;
+            return;
+        }
+        // if App was launched from VIEW or SEND Intent
+        // there's a race collision: the event will be lost,
+        // because App and UI wasn't completely initialized
+        // workaround: QShareActivity remembers that an Intent is pending
+        if(!mPendingIntentsChecked) {
+            mPendingIntentsChecked = true;
+            mShareUtils->checkPendingIntents(mAppDataFilesPath);
         }
     }
 }
