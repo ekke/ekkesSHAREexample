@@ -29,7 +29,7 @@ there are changes in Android 7: https://developer.android.com/about/versions/nou
 
 Here's an Overview about the workflows, per ex. Open a File from inside your App and edit in another App outside.
 
-![Overview](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/share_overview.png)
+![Overview](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/share_overview_v2.png)
 
 The goal of this app is to Open / View / Edit Files from your AppData Location in other Apps. But to be able to access your Files from AppData Location you first must copy them from AppData to shared UserData - per ex. DocumentsLocation.
 Of course at the end you need the modified File and you must delete the copy from Documentslocation, so we must watch for a SIGNAL from Android Intent or iOS UIDocumentInteractionController.
@@ -51,9 +51,11 @@ Of course at the end you need the modified File and you must delete the copy fro
 ![iOS Share](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_share.png)
 
 
-## 2. HowTo open Qt Mobile App from other Apps: the Android part is nearly done, iOS coming soon
+## 2. HowTo open Qt Mobile App from other Apps: the Android part is done, iOS coming soon
 
-...documentation work in progress ....
+![New Intent coming in from other Android App](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/new_intent.png)
+
+![Process Intent from other Android App](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/process_intent.png)
 
 ## More Infos
 follow me @ekkescorner
@@ -61,6 +63,8 @@ follow me @ekkescorner
 To read more please take a look at these blogs:
 
 Qt: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
+
+Qt: part 2 coming soon
 
 ekkes-corner: ... work in progress - stay tuned ...
 
