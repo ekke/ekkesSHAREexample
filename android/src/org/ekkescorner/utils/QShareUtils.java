@@ -120,8 +120,8 @@ public class QShareUtils
             Log.d("ekkescorner", title+" PackageManager cannot resolve Activity");
             return false;
         }
-        if (!defaultAppInfo.activityInfo.name.endsWith("ResolverActivity")) {
-            Log.d("ekkescorner", title+" defaultAppInfo not ResolverActivity: "+defaultAppInfo.activityInfo.name);
+        if (!defaultAppInfo.activityInfo.name.endsWith("ResolverActivity") && !defaultAppInfo.activityInfo.name.endsWith("EditActivity")) {
+            Log.d("ekkescorner", title+" defaultAppInfo not Resolver or EditActivity: "+defaultAppInfo.activityInfo.name);
             return false;
         }
 
