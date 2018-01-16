@@ -41,12 +41,12 @@ public:
         qDebug() << "check edit for " << mimeType;
         return true;}
     virtual void share(const QString &text, const QUrl &url){ qDebug() << text << url; }
-    virtual void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId){
-        qDebug() << filePath << " - " << title << "requestId " << requestId << " - " << mimeType; }
-    virtual void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId){
-        qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType; }
-    virtual void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId){
-        qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType; }
+    virtual void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl){
+        qDebug() << filePath << " - " << title << "requestId " << requestId << " - " << mimeType << "altImpl? " << altImpl; }
+    virtual void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl){
+        qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType << "altImpl? " << altImpl; }
+    virtual void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl){
+        qDebug() << filePath << " - " << title << " requestId: " << requestId << " - " << mimeType << "altImpl? " << altImpl; }
 
     virtual void checkPendingIntents(const QString workingDirPath){
         qDebug() << "checkPendingIntents " << workingDirPath; }
@@ -78,9 +78,9 @@ public:
     Q_INVOKABLE bool checkMimeTypeView(const QString &mimeType);
     Q_INVOKABLE bool checkMimeTypeEdit(const QString &mimeType);
     Q_INVOKABLE void share(const QString &text, const QUrl &url);
-    Q_INVOKABLE void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    Q_INVOKABLE void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    Q_INVOKABLE void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    Q_INVOKABLE void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
+    Q_INVOKABLE void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
+    Q_INVOKABLE void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
     Q_INVOKABLE void checkPendingIntents(const QString workingDirPath);
 
 private:

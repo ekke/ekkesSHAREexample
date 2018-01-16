@@ -16,9 +16,9 @@ public:
     bool checkMimeTypeView(const QString &mimeType);
     bool checkMimeTypeEdit(const QString &mimeType);
     void share(const QString &text, const QUrl &url);
-    void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
-    void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId);
+    void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
+    void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
+    void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
 
     void handleDocumentPreviewDone(const int &requestId);
 

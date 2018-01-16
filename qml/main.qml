@@ -13,6 +13,8 @@ ApplicationWindow {
     height: 480
     title: qsTr("Share Examples")
 
+    // some request ids to test
+    // in real-life apps you would use customerNumber, orderId, workflowId or similoar values to identify the context when getting a value back
     property int request_NO_RESPONSE_IMAGE: 0;
     property int request_NO_RESPONSE_PDF: -1;
     property int request_EDIT_FILE_IMAGE: 42;
@@ -22,31 +24,23 @@ ApplicationWindow {
     property int request_SEND_FILE_IMAGE: 11;
     property int request_SEND_FILE_PDF: 10;
 
+    // alternate implementations:
+    // currently only on Android and ignored under iOS)
+    //
+    // cpp: AndroidShareUtils implements 2 differen ways to start an Intent:
+    // default: one simple JNI Call and doing other stuff in Java
+    // alternate Implementation: doing it all using JNI Calls (only some parts completely implemented, because the one-JNI-fits-it-all is the recommended way)
+    // attention: to test JNI with QAndroidActivityResultReceiver you must uncomment onActivityResult() in QShareActivity.java
+    property bool useAltImpl: false
+
+
     SwipeView {
         id: swipeView
         anchors.fill: parent
         currentIndex: tabBar.currentIndex
 
         Page {
-            id: pageTextUrl
-            property alias result: textResult.text
-            Button {
-                id: shareButton
-                text: qsTr("Share Text and Url")
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                onClicked: {
-                    shareUtils.share("Qt","http://qt.io")
-                }
-            }
-            Label {
-                id: textResult
-                text: ""
-                anchors.top: shareButton.bottom
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.topMargin: 24
-            }
+            id: homePage
             Image {
                 id: image0
                 anchors.top: parent.top
@@ -59,67 +53,65 @@ ApplicationWindow {
                     }
                 }
             }
+            Label {
+                id: titleLabel
+                text: qsTr("Welcome to ekke's Share Example App")
+                wrapMode: Label.WordWrap
+                anchors.top: image0.bottom
+                anchors.left: parent.left
+                anchors.topMargin: 24
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
+            Label {
+                id: infoLabel
+                text: qsTr("Swipe through Pages or TabBar to test\n* Share Text\n* Send File (PNG or PDF)\n* View File (PNG or PDF)\n* Edit File (PNG or PDF)\nHint: Scroll the Bottom Tab Bar horizontally to get all Tabs !")
+                wrapMode: Label.WordWrap
+                anchors.top: titleLabel.bottom
+                anchors.left: parent.left
+                anchors.topMargin: 24
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
+            Label {
+                id: androidInfoLabel
+                visible: Qt.platform.os === "android"
+                text: qsTr("On Android there are two implementations: pure JNI (complicated) or simple JNI Call + Java (recommended)")
+                wrapMode: Label.WordWrap
+                anchors.top: infoLabel.bottom
+                anchors.left: parent.left
+                anchors.topMargin: 24
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
+            Label {
+                id: reverseLabel
+                text: qsTr("... and the reverse Way: GoTo a Page, open another App, share File with this Example App. Single Image should appear on current Page, other Filetypes or more Files should open a Popup\n...work in progress... Android implemented, iOS on TODO")
+                wrapMode: Label.WordWrap
+                anchors.top: Qt.platform.os === "android"? androidInfoLabel.bottom : infoLabel.bottom
+                anchors.left: parent.left
+                anchors.topMargin: 24
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
         }
 
         Page {
-            id: pageSend
-            property alias result: sendResult.text
-            Switch {
-                id: sendSwitch
-                text: checked? "PDF" : "PNG"
+            id: pageTextUrl
+            Button {
+                id: shareButton
+                text: qsTr("Share Text and Url")
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
-            }
-            Button {
-                id: sendButton
-                text: qsTr("Send File")
                 onClicked: {
-                    sendResult.text = ""
-                    if(Qt.platform.os === "android") {
-                        // if not using a RequestId we must know when Intent was finished
-                        // on Android we can do this by checking the ApplicationState
-                        if(sendSwitch.checked) {
-                            myApp.setShareState(true, false, request_SEND_FILE_PDF)
-                        } else {
-                            myApp.setShareState(true, false, request_SEND_FILE_IMAGE)
-                        }
-                    }
-                    if(sendSwitch.checked) {
-                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Send File", "application/pdf", request_NO_RESPONSE_PDF)
-                    } else {
-                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "Send File", "image/png", request_NO_RESPONSE_IMAGE)
-                    }
+                    shareUtils.share("Qt","http://qt.io")
                 }
-                anchors.top: sendSwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Button {
-                id: sendButtonWResult
-                text: qsTr("Send File with Result")
-                onClicked: {
-                    sendResult.text = ""
-                    if(sendSwitch.checked) {
-                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_SEND_FILE_PDF), "View File", "application/pdf", request_SEND_FILE_PDF)
-                    } else {
-                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_SEND_FILE_IMAGE), "View File", "image/png", request_SEND_FILE_IMAGE)
-                    }
-                }
-                anchors.top: sendButton.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Label {
-                id: sendResult
-                text: ""
-                anchors.top: sendButtonWResult.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
             }
             Image {
                 id: image1
@@ -136,80 +128,62 @@ ApplicationWindow {
         }
 
         Page {
-            id: pageView
-            property alias result: viewResult.text
+            id: pageSend
             Switch {
-                id: viewSwitch
-                text: checked? "PDF" : "PNG"
+                id: sendJNISwitch
+                visible: Qt.platform.os === "android"
+                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+                checked: appWindow.useAltImpl
+                onCheckedChanged: {
+                    appWindow.useAltImpl = checked
+                }
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
-            Button {
-                id: viewButton
-                text: qsTr("View File")
-                onClicked: {
-                    viewResult.text = ""
-                    if(Qt.platform.os === "android") {
-                        // if not using a RequestId we must know when Intent was finished
-                        // on Android we can do this by checking the ApplicationState
-                        if(viewSwitch.checkable) {
-                            myApp.setShareState(true, false, request_VIEW_FILE_PDF)
-                        } else {
-                            myApp.setShareState(true, false, request_VIEW_FILE_IMAGE)
-                        }
-                    }
-                    if(viewSwitch.checked) {
-                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "View File", "application/pdf", request_NO_RESPONSE_PDF)
-                    } else {
-                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "View File", "image/png", request_NO_RESPONSE_IMAGE)
-                    }
-                }
-                anchors.top: viewSwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Button {
-                id: viewButtonWResult
-                text: qsTr("View File with Result")
-                onClicked: {
-                    viewResult.text = ""
-                    if(viewSwitch.checked) {
-                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_VIEW_FILE_PDF), "View File", "application/pdf", request_VIEW_FILE_PDF)
-                    } else {
-                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_VIEW_FILE_IMAGE), "View File", "image/png", request_VIEW_FILE_IMAGE)
-                    }
-                }
-                anchors.top: viewButton.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Button {
-                id: viewButtonCheckMime
-                text: qsTr("Check MimeType for VIEW")
-                property string mimeType: viewSwitch.checked? "application/pdf" : "image/png"
-                onClicked: {
-                    viewResult.text = ""
-                    var verified = shareUtils.checkMimeTypeView(mimeType)
-                    if(verified) {
-                        viewResult.text = "success:\nApps available to View\n"+mimeType
-                    } else {
-                        viewResult.text = "sorry:\nNO Apps available to View\n"+mimeType
-                    }
-                }
-                anchors.top: viewButtonWResult.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-
             Label {
-                id: viewResult
-                text: ""
-                anchors.top: viewButtonCheckMime.bottom
+                visible: appWindow.useAltImpl
+                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+                color: "red"
+                anchors.top:sendJNISwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+            }
+            Switch {
+                id: sendSwitch
+                text: checked? "ON-> use PDF\n(switch off for PNG)" : "OFF-> use PNG\n(switch on for PDF)"
+                anchors.top: Qt.platform.os === "android"? sendJNISwitch.bottom : parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: appWindow.useAltImpl? 32 : 12
+            }
+            Button {
+                id: sendButton
+                text: Qt.platform.os === "android"? qsTr("Send File\n(no feedback)") : qsTr("Send File")
+                onClicked: {
+                    if(sendSwitch.checked) {
+                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Send File", "application/pdf", request_NO_RESPONSE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "Send File", "image/png", request_NO_RESPONSE_IMAGE, appWindow.useAltImpl)
+                    }
+                }
+                anchors.top: sendSwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Button {
+                id: sendButtonWResult
+                text: Qt.platform.os === "android"? qsTr("Send File with Result\n(recommended)") : qsTr("Send File with RequestId\n(recommended)")
+                onClicked: {
+                    if(sendSwitch.checked) {
+                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_SEND_FILE_PDF), "Send File", "application/pdf", request_SEND_FILE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.sendFile(copyFileFromAppDataIntoDocuments(request_SEND_FILE_IMAGE), "Send File", "image/png", request_SEND_FILE_IMAGE, appWindow.useAltImpl)
+                    }
+                }
+                anchors.top: sendButton.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
@@ -229,80 +203,81 @@ ApplicationWindow {
         }
 
         Page {
-            id: pageEdit
-            property alias result: editResult.text
+            id: pageView
             Switch {
-                id: editSwitch
-                text: checked? "PDF" : "PNG"
+                id: viewJNISwitch
+                visible: Qt.platform.os === "android"
+                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+                checked: appWindow.useAltImpl
+                onCheckedChanged: {
+                    appWindow.useAltImpl = checked
+                }
                 anchors.top: parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
-            Button {
-                id: editButton
-                text: qsTr("Edit File")
-                onClicked: {
-                    editResult.text = ""
-                    if(Qt.platform.os === "android") {
-                        // if not using a RequestId we must know when Edit was finished
-                        // on Android we can do this by checking the ApplicationState
-                        if(editSwitch.checked) {
-                            myApp.setShareState(true, true, request_EDIT_FILE_PDF)
-                        } else {
-                            myApp.setShareState(true, true, request_EDIT_FILE_IMAGE)
-                        }
-                    }
-                    if(editSwitch.checked) {
-                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Edit File", "application/pdf", request_NO_RESPONSE_PDF)
-                    } else {
-                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "Edit File", "image/png", request_NO_RESPONSE_IMAGE)
-                    }
-                }
-                anchors.top: editSwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Button {
-                id: editButtonWResult
-                text: qsTr("Edit File with Result")
-                onClicked: {
-                    editResult.text = ""
-                    if(editSwitch.checked) {
-                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_EDIT_FILE_PDF), "Edit File", "application/pdf", request_EDIT_FILE_PDF)
-                    } else {
-                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_EDIT_FILE_IMAGE), "Edit File", "image/png", request_EDIT_FILE_IMAGE)
-                    }
-
-                }
-                anchors.top: editButton.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Button {
-                id: editButtonCheckMime
-                text: qsTr("Check MimeType for EDIT")
-                property string mimeType: editSwitch.checked? "application/pdf" : "image/png"
-                onClicked: {
-                    editResult.text = ""
-                    var verified = shareUtils.checkMimeTypeEdit(mimeType)
-                    if(verified) {
-                        editResult.text = "success:\nApps available to Edit\n"+mimeType
-                    } else {
-                        editResult.text = "sorry:\nNO Apps available to Edit\n"+mimeType
-                    }
-                }
-                anchors.top: editButtonWResult.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
             Label {
-                id: editResult
-                text: ""
-                anchors.top: editButtonCheckMime.bottom
+                visible: appWindow.useAltImpl
+                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+                color: "red"
+                anchors.top:viewJNISwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+            }
+            Switch {
+                id: viewSwitch
+                text: checked? "ON-> use PDF\n(switch off for PNG)" : "OFF-> use PNG\n(switch on for PDF)"
+                anchors.top: Qt.platform.os === "android"? viewJNISwitch.bottom : parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: appWindow.useAltImpl? 32 : 12
+            }
+            Button {
+                id: viewButton
+                text: Qt.platform.os === "android"? qsTr("View File\n(no feedback)") : qsTr("View File")
+                onClicked: {
+                    if(viewSwitch.checked) {
+                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "View File", "application/pdf", request_NO_RESPONSE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "View File", "image/png", request_NO_RESPONSE_IMAGE, appWindow.useAltImpl)
+                    }
+                }
+                anchors.top: viewSwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Button {
+                id: viewButtonWResult
+                text: Qt.platform.os === "android"? qsTr("View File with Result\n(recommended)") : qsTr("View File with RequestId\n(recommended)")
+                onClicked: {
+                    if(viewSwitch.checked) {
+                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_VIEW_FILE_PDF), "View File", "application/pdf", request_VIEW_FILE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.viewFile(copyFileFromAppDataIntoDocuments(request_VIEW_FILE_IMAGE), "View File", "image/png", request_VIEW_FILE_IMAGE, appWindow.useAltImpl)
+                    }
+                }
+                anchors.top: viewButton.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Button {
+                id: viewButtonCheckMime
+                text: Qt.platform.os === "android"? qsTr("Check MimeType for VIEW") : qsTr("Check MimeType for VIEW\n(not used yet on iOS)")
+                property string mimeType: viewSwitch.checked? "application/pdf" : "image/png"
+                onClicked: {
+                    var verified = shareUtils.checkMimeTypeView(mimeType)
+                    if(verified) {
+                        popup.labelText = "success:\nApps available to View\n"+mimeType
+                        popup.open()
+                    } else {
+                        popup.labelText = "sorry:\nNO Apps available to View\n"+mimeType
+                        popup.open()
+                    }
+                }
+                anchors.top: viewButtonWResult.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
@@ -320,98 +295,217 @@ ApplicationWindow {
                 }
             }
         }
+
+        Page {
+            id: pageEdit
+            Switch {
+                id: editJNISwitch
+                visible: Qt.platform.os === "android"
+                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+                checked: appWindow.useAltImpl
+                onCheckedChanged: {
+                    appWindow.useAltImpl = checked
+                }
+                anchors.top: parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Label {
+                visible: appWindow.useAltImpl
+                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+                color: "red"
+                anchors.top:editJNISwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+            }
+            Switch {
+                id: editSwitch
+                text: checked? "ON-> use PDF\n(switch off for PNG)" : "OFF-> use PNG\n(switch on for PDF)"
+                anchors.top: Qt.platform.os === "android"? editJNISwitch.bottom : parent.top
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: appWindow.useAltImpl? 32 : 12
+            }
+            Button {
+                id: editButton
+                text: Qt.platform.os === "android"? qsTr("Edit File\n(no feedback)") : qsTr("Edit File")
+                onClicked: {
+                    if(editSwitch.checked) {
+                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_PDF), "Edit File", "application/pdf", request_NO_RESPONSE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_NO_RESPONSE_IMAGE), "Edit File", "image/png", request_NO_RESPONSE_IMAGE, appWindow.useAltImpl)
+                    }
+                }
+                anchors.top: editSwitch.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Button {
+                id: editButtonWResult
+                text: Qt.platform.os === "android"? qsTr("Edit File with Result\n(recommended)") : qsTr("Edit File with RequestId\n(recommeded)")
+                onClicked: {
+                    if(editSwitch.checked) {
+                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_EDIT_FILE_PDF), "Edit File", "application/pdf", request_EDIT_FILE_PDF, appWindow.useAltImpl)
+                    } else {
+                        shareUtils.editFile(copyFileFromAppDataIntoDocuments(request_EDIT_FILE_IMAGE), "Edit File", "image/png", request_EDIT_FILE_IMAGE, appWindow.useAltImpl)
+                    }
+
+                }
+                anchors.top: editButton.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Button {
+                id: editButtonCheckMime
+                text: Qt.platform.os === "android"? qsTr("Check MimeType for EDIT") : qsTr("Check MimeType for EDIT\n(not used yet on iOS)")
+                property string mimeType: editSwitch.checked? "application/pdf" : "image/png"
+                onClicked: {
+                    var verified = shareUtils.checkMimeTypeEdit(mimeType)
+                    if(verified) {
+                        popup.labelText = "success:\nApps available to Edit\n"+mimeType
+                        popup.open()
+                    } else {
+                        popup.labelText = "sorry:\nNO Apps available to Edit\n"+mimeType
+                        popup.open()
+                    }
+                }
+                anchors.top: editButtonWResult.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            Image {
+                id: image4
+                anchors.top: parent.top
+                anchors.right: parent.right
+                sourceSize.width: 160
+                MouseArea {
+                    anchors.fill: parent
+                    onClicked:  {
+                        image4.source = ""
+                    }
+                }
+            }
+        }
     }
 
     footer: TabBar {
         id: tabBar
         currentIndex: swipeView.currentIndex
-        TabButton {
-            text: qsTr("Text+URL")
-        }
-        TabButton {
-            text: qsTr("Send")
-        }
-        TabButton {
-            text: qsTr("View")
-        }
-        TabButton {
-            text: qsTr("Edit")
-        }
+        width: parent.width
+        Repeater {
+            id: tabButtonRepeater
+            model: [qsTr("Home"), qsTr("Text"), qsTr("Send"), qsTr("View"), qsTr("Edit")]
+                TabButton {
+                    text: modelData
+                    width: Math.max(90, tabBar.width/tabButtonRepeater.model.length)
+                }
+        } // tab repeater
     } // footer
 
     function onShareEditDone(requestCode) {
         console.log ("share done: "+ requestCode)
         if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
-            pageEdit.result = "Edit Done"
+            popup.labelText = "Edit Done"
+            popup.open()
             requestEditDone(requestCode)
             return
         }
-        pageEdit.result = "Done"
-        pageView.result = "Done"
-        pageSend.result = "Done"
+        popup.labelText = "Done"
+        popup.open()
     }
+    Timer {
+        id: delayDeleteTimer
+        property int theRequestCode
+        interval: 500
+        repeat: false
+        onTriggered: {
+            requestCanceledOrViewDoneOrSendDone(theRequestCode)
+        }
+    }
+
     function onShareFinished(requestCode) {
         console.log ("share canceled: "+ requestCode)
         if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
-            pageView.result = "View finished or canceled"
+            popup.labelText = "View finished or canceled"
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
         if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
-            pageEdit.result = "Edit canceled"
+            popup.labelText = "Edit canceled"
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
+        // Attention using ACTION_SEND it could happen that the Result comes back too fast
+        // and immediately deleting the file would cause that target app couldn't finish
+        // copying or printing the file
+        // workaround: use a Timer
+        // curious: this problem only happens if going the JAVA way
+        // it doesn't happen the JNI way
         if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
-            pageSend.result = "Sending File finished or canceled"
-            requestCanceledOrViewDoneOrSendDone(requestCode)
+            popup.labelText = "Sending File finished or canceled"
+            popup.open()
+            if(appWindow.useAltImpl) {
+                requestCanceledOrViewDoneOrSendDone(requestCode)
+            } else {
+                delayDeleteTimer.theRequestCode = requestCode
+                delayDeleteTimer.start()
+            }
             return
         }
-        pageEdit.result = "canceled"
-        pageView.result = "canceled"
-        pageSend.result = "canceled"
+        popup.labelText = "canceled"
+        popup.open()
     }
     function onShareNoAppAvailable(requestCode) {
         console.log ("share no App available: "+ requestCode)
         if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
-            pageView.result = "No App found (View File)"
+            popup.labelText = "No App found (View File)"
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
         if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
-            pageEdit.result = "No App found (Edit File)"
+            popup.labelText = "No App found (Edit File)"
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
         if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
-            pageSend.result = "No App found (Send File)"
+            popup.labelText = "No App found (Send File)"
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
-        pageEdit.result = "No App found"
-        pageView.result = "No App found"
-        pageSend.result = "No App found"
+        popup.labelText = "No App found"
+        popup.open()
     }
     function onShareError(requestCode, message) {
         console.log ("share error: "+ requestCode + " / " + message)
         if(requestCode === request_VIEW_FILE_PDF || requestCode === request_VIEW_FILE_IMAGE) {
-            pageView.result = "(View File) " + message
+            popup.labelText = "(View File) " + message
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
         if(requestCode === request_EDIT_FILE_PDF || requestCode === request_EDIT_FILE_IMAGE) {
-            pageEdit.result = "(Edit File) " + message
+            popup.labelText = "(Edit File) " + message
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
         if(requestCode === request_SEND_FILE_PDF || requestCode === request_SEND_FILE_IMAGE) {
-            pageSend.result = "(Send File) " + message
+            popup.labelText = "(Send File) " + message
+            popup.open()
             requestCanceledOrViewDoneOrSendDone(requestCode)
             return
         }
-        pageEdit.result = message
-        pageView.result = message
-        pageSend.result = message
+        popup.labelText = message
+        popup.open()
     }
 
     function copyFileFromAppDataIntoDocuments(requestId) {
@@ -429,12 +523,23 @@ ApplicationWindow {
     }
 
     function onNoDocumentsWorkLocation() {
+        popup.labelText = qsTr("Cannot copy to Documents work folder\nPlease check permissions\nThen restart the App")
         popup.open()
     }
 
     // simulates that you selected a destination directory where the File should be displayed / uploaded, ...
     function onFileUrlReceived(url) {
         console.log("QML: onFileUrlReceived "+url)
+        var isImage = false
+        if(url.endsWith("png") || url.endsWith("jpg")) {
+            isImage = true
+        }
+        if(!isImage) {
+            popup.labelText = qsTr("received File is not an Image\n%1").arg(url)
+            popup.open()
+            return
+        }
+
         if(swipeView.currentIndex === 0) {
             image0.source = "file://"+url
             return
@@ -451,6 +556,10 @@ ApplicationWindow {
             image3.source = "file://"+url
             return
         }
+        if(swipeView.currentIndex === 4) {
+            image4.source = "file://"+url
+            return
+        }
 
     }
 
@@ -465,6 +574,7 @@ ApplicationWindow {
         y: 16
         implicitHeight: 160
         implicitWidth: appWindow.width * .9
+        property alias labelText: popupLabel.text
         Column {
             anchors.right: parent.right
             anchors.left: parent.left
@@ -473,9 +583,10 @@ ApplicationWindow {
                 id: popupLabel
                 topPadding: 8
                 leftPadding: 8
-                rightPadding: 24
+                rightPadding: 8
+                width: parent.width
                 text: qsTr("Cannot copy to Documents work folder\nPlease check permissions\nThen restart the App")
-                wrapMode: Text.WordWrap
+                wrapMode: Text.WrapAtWordBoundaryOrAnywhere
             }
             Button {
                 id: okButton

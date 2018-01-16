@@ -221,14 +221,6 @@ bool ApplicationUI::updateFileFromDocumentsLocation(const int requestId) {
     return true;
 }
 
-void ApplicationUI::setShareState(const bool isShareActive, const bool isEditActive, const int requestCode)
-{
-    qDebug() << "set share state. active ?" << isShareActive << " edit ? " << isEditActive;
-    mShareActive = isShareActive;
-    mShareEditActive = isEditActive;
-    mShareRequestCode = requestCode;
-}
-
 #if defined(Q_OS_ANDROID)
 void ApplicationUI::onApplicationStateChanged(Qt::ApplicationState applicationState)
 {
@@ -238,21 +230,6 @@ void ApplicationUI::onApplicationStateChanged(Qt::ApplicationState applicationSt
         return;
     }
     if(applicationState == Qt::ApplicationState::ApplicationActive) {
-        if(mShareActive) {
-            qDebug() << "I am back";
-            // we're back from the external App
-            if(mShareEditActive) {
-                // important to know that edit was done:
-                // edited file must be copied back into APP Data !
-                mShareUtils->onShareEditDone(mShareRequestCode);
-            } else {
-                mShareUtils->onShareFinished(mShareRequestCode);
-            }
-            mShareEditActive = false;
-            mShareActive = false;
-            mShareRequestCode = 0;
-            return;
-        }
         // if App was launched from VIEW or SEND Intent
         // there's a race collision: the event will be lost,
         // because App and UI wasn't completely initialized

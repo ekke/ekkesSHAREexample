@@ -70,27 +70,30 @@ void AndroidShareUtils::share(const QString &text, const QUrl &url)
 }
 
 /*
- * Without a requestId we're going the Java - way with one simple JNI call
- * Getting a requestId we need the result to know if user canceled or finished sending the file
+ * As default we're going the Java - way with one simple JNI call (recommended)
+ * if altImpl is true we're going the pure JNI way
+ *
+ * If a requestId was set we want to get the Activity Result back (recommended)
+ * We need the Request Id and Result Id to control our workflow
 */
-void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId)
+void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl)
 {
-    if(requestId <= 0) {
+    mIsEditMode = false;
+
+    if(!altImpl) {
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
         jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "sendFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
-                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z",
+                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>(), requestId);
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
             emit shareNoAppAvailable(requestId);
         }
         return;
     }
-
-    mIsEditMode = false;
 
     // THE FILE PATH
     // to get a valid Path we must prefix file://
@@ -176,34 +179,43 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
         return;
     }
 
-    // now all is ready to start the Activity:
-    // we have the JNI Object, know the requestId
-    // and want the Result back into 'this' handleActivityResult(...)
-    QtAndroid::startActivity(jniIntent, requestId, this);
+    if(requestId <= 0) {
+        // we dont need a result if there's no requestId
+        QtAndroid::startActivity(jniIntent, requestId);
+    } else {
+        // we have the JNI Object, know the requestId
+        // and want the Result back into 'this' handleActivityResult(...)
+        // attention: to test JNI with QAndroidActivityResultReceiver you must comment or rename
+        // onActivityResult()  method in QShareActivity.java - otherwise you'll get wrong request or result codes
+        QtAndroid::startActivity(jniIntent, requestId, this);
+    }
 }
 
 /*
- * Without a requestId we're going the Java - way with one simple JNI call
- * Getting a requestId we need the result to know if user canceled or finished viewing the file
+ * As default we're going the Java - way with one simple JNI call (recommended)
+ * if altImpl is true we're going the pure JNI way
+ *
+ * If a requestId was set we want to get the Activity Result back (recommended)
+ * We need the Request Id and Result Id to control our workflow
 */
-void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId)
+void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl)
 {
-    if(requestId <= 0) {
+    mIsEditMode = false;
+
+    if(!altImpl) {
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
         jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "viewFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
-                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z",
+                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>(), requestId);
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
             emit shareNoAppAvailable(requestId);
         }
         return;
     }
-
-    mIsEditMode = false;
 
     // THE FILE PATH
     // to get a valid Path we must prefix file://
@@ -272,27 +284,42 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
         return;
     }
 
-    // now all is ready to start the Activity:
-    // we have the JNI Object, know the requestId
-    // and want the Result back into 'this' handleActivityResult(...)
-    QtAndroid::startActivity(jniIntent, requestId, this);
+    if(requestId <= 0) {
+        // we dont need a result if there's no requestId
+        QtAndroid::startActivity(jniIntent, requestId);
+    } else {
+        // we have the JNI Object, know the requestId
+        // and want the Result back into 'this' handleActivityResult(...)
+        // attention: to test JNI with QAndroidActivityResultReceiver you must comment or rename
+        // onActivityResult()  method in QShareActivity.java - otherwise you'll get wrong request or result codes
+        QtAndroid::startActivity(jniIntent, requestId, this);
+    }
 }
 
 /*
- * Without a requestId we're going the Java - way with one simple JNI call
- * Getting a requestId we need the result to know if user canceled or saved the edited file
+ * As default we're going the Java - way with one simple JNI call (recommended)
+ * if altImpl is true we're going the pure JNI way
+ *
+ * If a requestId was set we want to get the Activity Result back (recommended)
+ * We need the Request Id and Result Id to control our workflow
 */
-void AndroidShareUtils::editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId)
+void AndroidShareUtils::editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl)
 {
-    if(requestId <= 0) {
+    mIsEditMode = true;
+    mCurrentFilePath = filePath;
+    QFileInfo fileInfo = QFileInfo(mCurrentFilePath);
+    mLastModified = fileInfo.lastModified().toSecsSinceEpoch();
+    qDebug() << "LAST MODIFIED: " << mLastModified;
+
+    if(!altImpl) {
         QAndroidJniObject jsPath = QAndroidJniObject::fromString(filePath);
         QAndroidJniObject jsTitle = QAndroidJniObject::fromString(title);
         QAndroidJniObject jsMimeType = QAndroidJniObject::fromString(mimeType);
 
         jboolean ok = QAndroidJniObject::callStaticMethod<jboolean>("org/ekkescorner/utils/QShareUtils",
                                                   "editFile",
-                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Z",
-                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>());
+                                                  "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Z",
+                                                  jsPath.object<jstring>(), jsTitle.object<jstring>(), jsMimeType.object<jstring>(), requestId);
 
         if(!ok) {
             qWarning() << "Unable to resolve activity from Java";
@@ -300,12 +327,6 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
         }
         return;
     }
-
-    mIsEditMode = true;
-    mCurrentFilePath = filePath;
-    QFileInfo fileInfo = QFileInfo(mCurrentFilePath);
-    mLastModified = fileInfo.lastModified().toSecsSinceEpoch();
-    qDebug() << "LAST MODIFIED: " << mLastModified;
 
     // THE FILE PATH
     // to get a valid Path we must prefix file://
@@ -375,18 +396,38 @@ void AndroidShareUtils::editFile(const QString &filePath, const QString &title, 
     }
 
     // now all is ready to start the Activity:
-    // we have the JNI Object, know the requestId
-    // and want the Result back into 'this' handleActivityResult(...)
-    QtAndroid::startActivity(jniIntent, requestId, this);
+    if(requestId <= 0) {
+        // we dont need a result if there's no requestId
+        QtAndroid::startActivity(jniIntent, requestId);
+    } else {
+        // we have the JNI Object, know the requestId
+        // and want the Result back into 'this' handleActivityResult(...)
+        // attention: to test JNI with QAndroidActivityResultReceiver you must comment or rename
+        // onActivityResult()  method in QShareActivity.java - otherwise you'll get wrong request or result codes
+        QtAndroid::startActivity(jniIntent, requestId, this);
+    }
 }
 
+// used from QAndroidActivityResultReceiver
 void AndroidShareUtils::handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data)
 {
     Q_UNUSED(data);
-    qDebug() << "handleActivityResult: " << receiverRequestCode << "ResultCode:" << resultCode;
+    qDebug() << "From JNI QAndroidActivityResultReceiver: " << receiverRequestCode << "ResultCode:" << resultCode;
+    processActivityResult(receiverRequestCode, resultCode);
+}
+
+// used from Activity.java onActivityResult()
+void AndroidShareUtils::onActivityResult(int requestCode, int resultCode)
+{
+    qDebug() << "From Java Activity onActivityResult: " << requestCode << "ResultCode:" << resultCode;
+    processActivityResult(requestCode, resultCode);
+}
+
+void AndroidShareUtils::processActivityResult(int requestCode, int resultCode)
+{
     // we're getting RESULT_OK only if edit is done
     if(resultCode == RESULT_OK) {
-        emit shareEditDone(receiverRequestCode);
+        emit shareEditDone(requestCode);
     } else if(resultCode == RESULT_CANCELED) {
         if(mIsEditMode) {
             // Attention: not all Apps will give you the correct ResultCode:
@@ -398,14 +439,14 @@ void AndroidShareUtils::handleActivityResult(int receiverRequestCode, int result
             qint64 currentModified = fileInfo.lastModified().toSecsSinceEpoch();
             qDebug() << "CURRENT MODIFIED: " << currentModified;
             if(currentModified > mLastModified) {
-                emit shareEditDone(receiverRequestCode);
+                emit shareEditDone(requestCode);
                 return;
             }
         }
-        emit shareFinished(receiverRequestCode);
+        emit shareFinished(requestCode);
     } else {
-        qDebug() << "wrong result code: " << resultCode << " from request: " << receiverRequestCode;
-        emit shareError(receiverRequestCode, tr("Share: an Error occured"));
+        qDebug() << "wrong result code: " << resultCode << " from request: " << requestCode;
+        emit shareError(requestCode, tr("Share: an Error occured"));
     }
 }
 
@@ -479,6 +520,10 @@ void AndroidShareUtils::setFileReceivedAndSaved(const QString &url)
     }
 }
 
+// instead of defining all JNICALL as demonstrated below
+// there's another way, making it easier to manage all the methods
+// see https://www.kdab.com/qt-android-episode-5/
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -504,6 +549,18 @@ JNIEXPORT void JNICALL
     Q_UNUSED (obj)
     AndroidShareUtils::getInstance()->setFileReceivedAndSaved(urlStr);
     env->ReleaseStringUTFChars(url, urlStr);
+    return;
+}
+
+JNIEXPORT void JNICALL
+  Java_org_ekkescorner_examples_sharex_QShareActivity_fireActivityResult(JNIEnv *env,
+                                        jobject obj,
+                                        jint requestCode,
+                                        jint resultCode)
+{
+    Q_UNUSED (obj)
+    Q_UNUSED (env)
+    AndroidShareUtils::getInstance()->onActivityResult(requestCode, resultCode);
     return;
 }
 

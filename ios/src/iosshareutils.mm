@@ -52,8 +52,9 @@ void IosShareUtils::share(const QString &text, const QUrl &url) {
     [qtUIViewController presentViewController:activityController animated:YES completion:nil];
 }
 
-void IosShareUtils::sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
-#pragma unused (title, mimeType)
+// altImpl not used yet on iOS, on Android twi ways to use JNI
+void IosShareUtils::sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) {
+#pragma unused (title, mimeType, altImpl)
 
     NSString* nsFilePath = filePath.toNSString();
     NSURL *nsFileUrl = [NSURL fileURLWithPath:nsFilePath];
@@ -85,16 +86,16 @@ void IosShareUtils::sendFile(const QString &filePath, const QString &title, cons
 }
 
 
-void IosShareUtils::viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
+void IosShareUtils::viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) {
 #pragma unused (title, mimeType)
 
-    sendFile(filePath, title, mimeType, requestId);
+    sendFile(filePath, title, mimeType, requestId, altImpl);
 }
 
-void IosShareUtils::editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId) {
+void IosShareUtils::editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) {
 #pragma unused (title, mimeType)
 
-    sendFile(filePath, title, mimeType, requestId);
+    sendFile(filePath, title, mimeType, requestId, altImpl);
 }
 
 void IosShareUtils::handleDocumentPreviewDone(const int &requestId)
