@@ -43,6 +43,8 @@ public class QShareActivity extends QtActivity
     public static native void setFileReceivedAndSaved(String url);
     //
     public static native void fireActivityResult(int requestCode, int resultCode);
+    //
+    public static native boolean checkFileExits(String url);
 
     public static boolean isIntentPending;
     public static boolean isInitialized;
@@ -161,14 +163,14 @@ public class QShareActivity extends QtActivity
               return;
       }
       // ok - it's a content scheme URI
-      // we will try to resolve the Path to a file URI
-      // if this won't work, we'll copy the file into our App working dir via InputStream
-      // hopefully in most cases Pathresolver will give a path
-      // to easy test if InputStream will work, there's a switch to forceInputStream
+      // we will try to resolve the Path to a File URI
+      // if this won't work or if the File cannot be opened,
+      // we'll try to copy the file into our App working dir via InputStream
+      // hopefully in most cases PathResolver will give a path
 
-      // perhaps you nee the file extension, MimeType or Name from ContentResolver
+      // you need the file extension, MimeType or Name from ContentResolver ?
       // here's HowTo get it:
-      Log.d("ekkescorner Intent URI: ", intentUri.toString());
+      Log.d("ekkescorner Intent Content URI: ", intentUri.toString());
       ContentResolver cR = this.getContentResolver();
       MimeTypeMap mime = MimeTypeMap.getSingleton();
       String fileExtension = mime.getExtensionFromMimeType(cR.getType(intentUri));
@@ -187,12 +189,16 @@ public class QShareActivity extends QtActivity
             Log.d("ekkescorner QSharePathResolver:", "filePath is NULL");
       } else {
             Log.d("ekkescorner QSharePathResolver:", filePath);
-            setFileUrlReceived(filePath);
-            // we are done Qt can deal with file scheme
-            return;
+            // to be safe check if this File Url really can be opened by Qt
+            // there were problems with MS office apps on Android 7
+            if (checkFileExits(filePath)) {
+                setFileUrlReceived(filePath);
+                // we are done Qt can deal with file scheme
+                return;
+            }
       }
 
-      // going the InputStream way:
+      // trying the InputStream way:
       filePath = QShareUtils.createFile(cR, intentUri, workingDirPath);
       if(filePath == null) {
            Log.d("ekkescorner Intent FilePath:", "is NULL");

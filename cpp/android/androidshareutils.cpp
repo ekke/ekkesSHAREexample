@@ -520,6 +520,35 @@ void AndroidShareUtils::setFileReceivedAndSaved(const QString &url)
     }
 }
 
+// to be safe we check if a File Url from java really exists for Qt
+// if not on the Java side we'll try to read the content as Stream
+bool AndroidShareUtils::checkFileExits(const QString &url)
+{
+    if(url.isEmpty()) {
+        qWarning() << "checkFileExits: we got an empty URL";
+        emit shareError(0, tr("Empty URL received"));
+        return false;
+    }
+    qDebug() << "AndroidShareUtils checkFileExits: we got the File URL from JAVA: " << url;
+    QString myUrl;
+    if(url.startsWith("file://")) {
+        myUrl= url.right(url.length()-7);
+        qDebug() << "QFile needs this URL: " << myUrl;
+    } else {
+        myUrl= url;
+    }
+
+    // check if File exists
+    QFileInfo fileInfo = QFileInfo(myUrl);
+    if(fileInfo.exists()) {
+        qDebug() << "Yep: the File exists for Qt";
+        return true;
+    } else {
+        qDebug() << "Uuups: FILE does NOT exist ";
+        return false;
+    }
+}
+
 // instead of defining all JNICALL as demonstrated below
 // there's another way, making it easier to manage all the methods
 // see https://www.kdab.com/qt-android-episode-5/
@@ -550,6 +579,18 @@ JNIEXPORT void JNICALL
     AndroidShareUtils::getInstance()->setFileReceivedAndSaved(urlStr);
     env->ReleaseStringUTFChars(url, urlStr);
     return;
+}
+
+JNIEXPORT bool JNICALL
+  Java_org_ekkescorner_examples_sharex_QShareActivity_checkFileExits(JNIEnv *env,
+                                        jobject obj,
+                                        jstring url)
+{
+    const char *urlStr = env->GetStringUTFChars(url, NULL);
+    Q_UNUSED (obj)
+    bool exists = AndroidShareUtils::getInstance()->checkFileExits(urlStr);
+    env->ReleaseStringUTFChars(url, urlStr);
+    return exists;
 }
 
 JNIEXPORT void JNICALL
