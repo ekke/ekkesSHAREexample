@@ -13,11 +13,13 @@ This is not a real-life app - this app only demonstrates
 
 1. HowTo share Files from Qt Mobile App with other Apps on Android and iOS
 
-2. HowTo open Qt Mobile App from other Apps: the Android part is nearly done, iOS coming soon
+2. HowTo open Qt Mobile App from other Apps on Android and iOS
 
 !!! not production ready !!!
 
 !!! please set Permission WRITE_EXTERNAL_STORAGE on Android 6+ !!!
+
+!!! please use Target SDK 23 on Android !!!
 
 ## 1. HowTo share Files from Qt Mobile App with other Apps on Android and iOS
 
@@ -51,22 +53,35 @@ Of course at the end you need the modified File and you must delete the copy fro
 ![iOS Share](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/ios_share.png)
 
 
-## 2. HowTo open Qt Mobile App from other Apps: the Android part is done, iOS coming soon
+## 2. HowTo open Qt Mobile App from other Apps on Android and iOS
+
+### Open Qt Apps from Android Apps
 
 ![New Intent coming in from other Android App](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/new_intent.png)
 
 ![Process Intent from other Android App](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/process_intent.png)
+
+### Open Qt Apps from iOS Apps
+
+![Handle Url from other iOS App](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/handle_url_from_ios_apps.png)
+
 
 ## More Infos
 follow me @ekkescorner
 
 To read more please take a look at these blogs:
 
-Qt: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
+![ekkes Sharing Blogs at Qt Blog](https://github.com/ekke/ekkesSHAREexample/blob/master/docs/qt_blog_overview.png)
 
-Qt: part 2 coming soon
+Qt: Part 1: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
 
-ekkes-corner: ... work in progress - stay tuned ...
+Qt: Part 2: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
+
+Qt: part 3: coming soon
+
+blogs at ekkes-corner: ... work in progress - stay tuned ...
+
+articles in (german) web & mobile developer magazin: ... work in progress - stay tuned ...
 
 
 
