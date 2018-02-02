@@ -75,7 +75,7 @@ To read more please take a look at these blogs:
 
 Qt: Part 1: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
 
-Qt: Part 2: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
+Qt: Part 2: http://blog.qt.io/blog/2018/01/16/sharing-files-android-ios-qt-app-part-2/
 
 Qt: part 3: coming soon
 
