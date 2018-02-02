@@ -126,6 +126,7 @@ public class QSharePathResolver {
             cursor.close();
             return name;
         }
+        cursor.close();
         return null;
     }
 
