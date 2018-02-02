@@ -22,6 +22,10 @@ public:
 
     void handleDocumentPreviewDone(const int &requestId);
 
+public slots:
+    void handleFileUrlReceived(const QUrl &url);
+
+
 };
 
 #endif

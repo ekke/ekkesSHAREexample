@@ -7,6 +7,9 @@
 #import <UIKit/UIKit.h>
 #import <QGuiApplication>
 #import <QQuickWindow>
+#import <QDesktopServices>
+#import <QUrl>
+#import <QFileInfo>
 
 #import <UIKit/UIDocumentInteractionController.h>
 
@@ -14,7 +17,9 @@
 
 IosShareUtils::IosShareUtils(QObject *parent) : PlatformShareUtils(parent)
 {
-    //
+    // Sharing Files from other iOS Apps I got the ideas and some code contribution from:
+    // Thomas K. Fischer (@taskfabric) - http://taskfabric.com - thx
+    QDesktopServices::setUrlHandler("file", this, "handleFileUrlReceived");
 }
 
 bool IosShareUtils::checkMimeTypeView(const QString &mimeType) {
@@ -103,6 +108,33 @@ void IosShareUtils::handleDocumentPreviewDone(const int &requestId)
     // documentInteractionControllerDidEndPreview
     qDebug() << "handleShareDone: " << requestId;
     emit shareFinished(requestId);
+}
+
+void IosShareUtils::handleFileUrlReceived(const QUrl &url)
+{
+    QString incomingUrl = url.toString();
+    if(incomingUrl.isEmpty()) {
+        qWarning() << "setFileUrlReceived: we got an empty URL";
+        emit shareError(0, tr("Empty URL received"));
+        return;
+    }
+    qDebug() << "IosShareUtils setFileUrlReceived: we got the File URL from iOS: " << incomingUrl;
+    QString myUrl;
+    if(incomingUrl.startsWith("file://")) {
+        myUrl= incomingUrl.right(incomingUrl.length()-7);
+        qDebug() << "QFile needs this URL: " << myUrl;
+    } else {
+        myUrl= incomingUrl;
+    }
+
+    // check if File exists
+    QFileInfo fileInfo = QFileInfo(myUrl);
+    if(fileInfo.exists()) {
+        emit fileUrlReceived(myUrl);
+    } else {
+        qDebug() << "setFileUrlReceived: FILE does NOT exist ";
+        emit shareError(0, tr("File does not exist: %1").arg(myUrl));
+    }
 }
 
 
