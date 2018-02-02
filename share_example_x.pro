@@ -26,6 +26,14 @@ OTHER_FILES += data_assets/*.png \
     LICENSE \
     COPYRIGHT
 
+# can be placed under ios only, but I prefer to see them always
+OTHER_FILES += ios/src/*.mm
+
+# can be placed under android only, but I prefer to see them always
+OTHER_FILES += android/src/org/ekkescorner/utils/QShareUtils.java \
+    android/src/org/ekkescorner/examples/sharex/QShareActivity.java \
+    android/src/org/ekkescorner/utils/QSharePathResolver.java
+
 RESOURCES += qml.qrc \
     data_assets.qrc
 
@@ -57,10 +65,6 @@ android {
 
     HEADERS += cpp/android/androidshareutils.hpp
 
-    OTHER_FILES += android/src/org/ekkescorner/utils/QShareUtils.java \
-        android/src/org/ekkescorner/examples/sharex/QShareActivity.java \
-        android/src/org/ekkescorner/utils/QSharePathResolver.java
-
     ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android
 }
 
@@ -70,6 +74,8 @@ ios {
 
     HEADERS += cpp/ios/iosshareutils.hpp \
     cpp/ios/docviewcontroller.hpp
+
+    QMAKE_INFO_PLIST = ios/Info.plist
 
     QMAKE_IOS_DEPLOYMENT_TARGET = 8.2
 
