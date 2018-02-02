@@ -35,6 +35,9 @@ https://stackoverflow.com/questions/7156932/open-file-in-another-app
 https://bugreports.qt.io/browse/QTBUG-42942?focusedCommentId=285903&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-285903
 https://stackoverflow.com/questions/5734678/custom-filtering-of-intent-chooser-based-on-installed-android-package-name
 
+Sharing Files from other iOS Apps I got the ideas and some code contribution from:
+Thomas K. Fischer (@taskfabric) - http://taskfabric.com - thx
+
 this app is using the unlicense:
 =============================================================================
 This is free and unencumbered software released into the public domain.
