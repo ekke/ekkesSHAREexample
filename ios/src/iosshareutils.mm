@@ -86,7 +86,11 @@ void IosShareUtils::sendFile(const QString &filePath, const QString &title, cons
 
         [qtUIViewController addChildViewController:docViewController];
         documentInteractionController.delegate = docViewController;
-        [documentInteractionController presentPreviewAnimated:YES];
+        // [documentInteractionController presentPreviewAnimated:YES];
+        if(![documentInteractionController presentPreviewAnimated:YES])
+        {
+            emit shareError(0, tr("No App found to open: %1").arg(filePath));
+        }
     }
 }
 
