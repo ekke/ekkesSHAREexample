@@ -17,17 +17,15 @@ This is not a real-life app - this app only demonstrates
 
 !!! not production ready !!!
 
-!!! please set Permission WRITE_EXTERNAL_STORAGE on Android 6+ !!!
-
-!!! please use Target SDK 23 on Android !!!
-
 ## 1. HowTo share Files from Qt Mobile App with other Apps on Android and iOS
 
 On Android we're using Intents, on iOS UIDocumentInteractionController.
 
-Developed and tested on Android 6, Android 7, Android 8, iOS and Qt 5.9.1
-Android: Target SDK 23
-there are changes in Android 7: https://developer.android.com/about/versions/nougat/android-7.0-changes.html#sharing-files
+Developed and tested on Android 6, Android 7, Android 8, iOS and Qt 5.10.1
+Android: This release now supports FileProvider and sets Permissions if incoming Files need
+iOS: This release supports Xcode 9.x and minimum iOS 10 (required by Qt 5.10.1)
+
+Now more examplels included to share with other Apps: PNG, JPEG, DOCX, PDF
 
 Here's an Overview about the workflows, per ex. Open a File from inside your App and edit in another App outside.
 
@@ -77,7 +75,9 @@ Qt: Part 1: http://blog.qt.io/blog/2017/12/01/sharing-files-android-ios-qt-app/
 
 Qt: Part 2: http://blog.qt.io/blog/2018/01/16/sharing-files-android-ios-qt-app-part-2/
 
-Qt: part 3: coming soon
+Qt: part 3: http://blog.qt.io/blog/2018/02/06/sharing-files-android-ios-qt-app-part-3/
+
+Qt: part 4: coming soon
 
 blogs at ekkes-corner: ... work in progress - stay tuned ...
 

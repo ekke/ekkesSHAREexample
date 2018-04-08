@@ -87,7 +87,9 @@ public class QShareActivity extends QtActivity
         }
         // hint: result comes back too fast for Action SEND
         // if you want to delete/move the File add a Timer w 500ms delay
-        // see Example App main.qml
+        // see Example App main.qml - delayDeleteTimer
+        // if you want to revoke permissions for older OS
+        // it makes sense also do this after the delay
         fireActivityResult(requestCode, resultCode);
     }
 

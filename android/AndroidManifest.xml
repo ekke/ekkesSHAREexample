@@ -76,9 +76,14 @@
 
     <!-- For adding service(s) please check: https://wiki.qt.io/AndroidServices -->
 
+    <!-- Register the File Provider for document sharing -->
+    <provider android:name="android.support.v4.content.FileProvider" android:authorities="org.ekkescorner.examples.sharex.fileprovider" android:grantUriPermissions="true" android:exported="false">
+        <meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/filepaths"/>
+    </provider>
+
     </application>
 
-    <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="23"/>
+    <uses-sdk android:minSdkVersion="18" android:targetSdkVersion="26"/>
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
 
     <!-- The following comment will be replaced upon deployment with default permissions based on the dependencies of the application.

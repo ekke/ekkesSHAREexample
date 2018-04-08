@@ -2,5 +2,7 @@
     <qresource prefix="/">
         <file>data_assets/qt-logo.png</file>
         <file>data_assets/share_file.pdf</file>
+        <file>data_assets/test.docx</file>
+        <file>data_assets/crete.jpg</file>
     </qresource>
 </RCC>

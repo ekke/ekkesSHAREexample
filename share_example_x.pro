@@ -54,9 +54,11 @@ DISTFILES += \
     android/gradle/wrapper/gradle-wrapper.jar \
     android/gradlew \
     android/res/values/libs.xml \
+    android/res/xml/filepaths.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
+    android/gradlew.bat \
+    data_assets/ekke.jpg
 
 android {
     QT += androidextras
@@ -77,11 +79,25 @@ ios {
 
     QMAKE_INFO_PLIST = ios/Info.plist
 
-    QMAKE_IOS_DEPLOYMENT_TARGET = 8.2
+    QMAKE_IOS_DEPLOYMENT_TARGET = 10.0
 
     disable_warning.name = GCC_WARN_64_TO_32_BIT_CONVERSION
     disable_warning.value = NO
     QMAKE_MAC_XCODE_SETTINGS += disable_warning
+
+    # see https://bugreports.qt.io/browse/QTCREATORBUG-16968
+    # ios_signature.pri not part of project repo because of private signature details
+    # contains:
+    # QMAKE_XCODE_CODE_SIGN_IDENTITY = "iPhone Developer"
+    # MY_DEVELOPMENT_TEAM.name = DEVELOPMENT_TEAM
+    # MY_DEVELOPMENT_TEAM.value = your team Id from Apple Developer Account
+    # QMAKE_MAC_XCODE_SETTINGS += MY_DEVELOPMENT_TEAM
+
+    include(ios_signature.pri)
+
+    MY_BUNDLE_ID.name = PRODUCT_BUNDLE_IDENTIFIER
+    MY_BUNDLE_ID.value = org.ekkescorner.share_example_x
+    QMAKE_MAC_XCODE_SETTINGS += MY_BUNDLE_ID
 
     # Note for devices: 1=iPhone, 2=iPad, 1,2=Universal.
     QMAKE_APPLE_TARGETED_DEVICE_FAMILY = 1,2

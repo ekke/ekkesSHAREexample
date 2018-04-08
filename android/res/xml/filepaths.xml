@@ -1,0 +1,3 @@
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <files-path name="my_shared_files" path="share_example_x_files/" />
+</paths>

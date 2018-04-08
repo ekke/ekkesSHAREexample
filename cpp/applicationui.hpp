@@ -31,6 +31,11 @@ public:
      Q_INVOKABLE
      bool updateFileFromDocumentsLocation(const int requestId);
 
+#if defined(Q_OS_ANDROID)
+     Q_INVOKABLE
+     bool checkPermission();
+#endif
+
 signals:
      void noDocumentsWorkLocation();
 
