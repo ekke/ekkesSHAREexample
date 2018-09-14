@@ -176,9 +176,9 @@ public class QShareActivity extends QtActivity
       ContentResolver cR = this.getContentResolver();
       MimeTypeMap mime = MimeTypeMap.getSingleton();
       String fileExtension = mime.getExtensionFromMimeType(cR.getType(intentUri));
-      Log.d("ekkescorner Intent extension: ",fileExtension);
+      Log.d("ekkescorner","Intent extension: "+fileExtension);
       String mimeType = cR.getType(intentUri);
-      Log.d("ekkescorner Intent MimeType: ",mimeType);
+      Log.d("ekkescorner"," Intent MimeType: "+mimeType);
       String name = QShareUtils.getContentName(cR, intentUri);
       if(name != null) {
            Log.d("ekkescorner Intent Name:", name);
