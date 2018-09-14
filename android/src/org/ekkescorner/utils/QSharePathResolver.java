@@ -1,7 +1,7 @@
-// from: https://github.com/wkh237/react-native-fetch-blob/blob/master/android/src/main/java/com/RNFetchBlob/Utils/PathResolver.java 
-// MIT License, see: https://github.com/wkh237/react-native-fetch-blob/blob/master/LICENSE 
-// original copyright: Copyright (c) 2017 xeiyan@gmail.com 
-// src slightly modified to be used into Qt Projects: (c) 2017 ekke@ekkes-corner.org 
+// from: https://github.com/wkh237/react-native-fetch-blob/blob/master/android/src/main/java/com/RNFetchBlob/Utils/PathResolver.java
+// MIT License, see: https://github.com/wkh237/react-native-fetch-blob/blob/master/LICENSE
+// original copyright: Copyright (c) 2017 xeiyan@gmail.com
+// src slightly modified to be used into Qt Projects: (c) 2017 ekke@ekkes-corner.org
 
 package org.ekkescorner.utils;
 
@@ -17,6 +17,8 @@ import android.content.ContentResolver;
 import java.io.File;
 import java.io.InputStream;
 import java.io.FileOutputStream;
+import android.util.Log;
+import java.lang.NumberFormatException;
 
 public class QSharePathResolver {
     public static String getRealPathFromURI(final Context context, final Uri uri) {
@@ -27,6 +29,7 @@ public class QSharePathResolver {
         if (isKitKat && DocumentsContract.isDocumentUri(context, uri)) {
             // ExternalStorageProvider
             if (isExternalStorageDocument(uri)) {
+                Log.d("ekkescorner"," isExternalStorageDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -39,15 +42,26 @@ public class QSharePathResolver {
             }
             // DownloadsProvider
             else if (isDownloadsDocument(uri)) {
-
+                Log.d("ekkescorner"," isDownloadsDocument");
                 final String id = DocumentsContract.getDocumentId(uri);
+                Log.d("ekkescorner"," getDocumentId "+id);
+                long longId = 0;
+                try
+                  {
+                    longId = Long.valueOf(id);
+                  }
+                  catch(NumberFormatException nfe)
+                  {
+                      return getDataColumn(context, uri, null, null);
+                  }
                 final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+                        Uri.parse("content://downloads/public_downloads"), longId);
 
                 return getDataColumn(context, contentUri, null, null);
             }
             // MediaProvider
             else if (isMediaDocument(uri)) {
+                Log.d("ekkescorner"," isMediaDocument");
                 final String docId = DocumentsContract.getDocumentId(uri);
                 final String[] split = docId.split(":");
                 final String type = split[0];
@@ -69,7 +83,7 @@ public class QSharePathResolver {
                 return getDataColumn(context, contentUri, selection, selectionArgs);
             }
             else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
+                Log.d("ekkescorner"," is uri.getScheme()");
                 // Return the remote address
                 if (isGooglePhotosUri(uri))
                     return uri.getLastPathSegment();
@@ -78,6 +92,7 @@ public class QSharePathResolver {
             }
             // Other Providers
             else{
+                Log.d("ekkescorner ","is Other Provider");
                 try {
                     InputStream attachment = context.getContentResolver().openInputStream(uri);
                     if (attachment != null) {
@@ -102,15 +117,18 @@ public class QSharePathResolver {
         }
         // MediaStore (and general)
         else if ("content".equalsIgnoreCase(uri.getScheme())) {
-
+            Log.d("ekkescorner ","NOT DocumentsContract.isDocumentUri");
+            Log.d("ekkescorner"," is uri.getScheme()");
             // Return the remote address
             if (isGooglePhotosUri(uri))
                 return uri.getLastPathSegment();
-
+            Log.d("ekkescorner"," return: getDataColumn ");
             return getDataColumn(context, uri, null, null);
         }
         // File
         else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            Log.d("ekkescorner ","NOT DocumentsContract.isDocumentUri");
+            Log.d("ekkescorner"," is file scheme");
             return uri.getPath();
         }
 
