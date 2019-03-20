@@ -81,7 +81,12 @@ public class QShareActivity extends QtActivity
     @Override
     public void onDestroy() {
         Log.d("ekkescorner", "onDestroy QShareActivity");
-        super.onDestroy();
+        // super.onDestroy();
+        // System.exit() closes the App before doing onCreate() again
+        // then the App was restarted, but looses context
+        // This works for Samsung My Files
+        // but Google Files doesn't call onDestroy()
+        System.exit(0);
     }
 
     // we start Activity with result code
