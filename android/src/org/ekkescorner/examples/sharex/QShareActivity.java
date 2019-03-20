@@ -73,6 +73,17 @@ public class QShareActivity extends QtActivity
           }
     } // onCreate
 
+    // WIP - trying to find a solution to survive a 2nd onCreate
+    // ongoing discussion in QtMob (Slack)
+    // from other Apps not respecting that you only have a singleInstance
+    // there are problems per ex. sharing a file from Google Files App,
+    // but working well using Xiaomi FileManager App
+    @Override
+    public void onDestroy() {
+        Log.d("ekkescorner", "onDestroy QShareActivity");
+        super.onDestroy();
+    }
+
     // we start Activity with result code
     // to test JNI with QAndroidActivityResultReceiver you must comment or rename
     // this method here - otherwise you'll get wrong request or result codes
