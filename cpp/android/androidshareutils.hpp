@@ -14,17 +14,17 @@ class AndroidShareUtils : public PlatformShareUtils, public QAndroidActivityResu
 {
 public:
     AndroidShareUtils(QObject* parent = 0);
-    bool checkMimeTypeView(const QString &mimeType);
-    bool checkMimeTypeEdit(const QString &mimeType);
+    bool checkMimeTypeView(const QString &mimeType) override;
+    bool checkMimeTypeEdit(const QString &mimeType) override;
     void share(const QString &text, const QUrl &url) override;
     void sendFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) override;
     void viewFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) override;
     void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl) override;
 
-    void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data);
+    void handleActivityResult(int receiverRequestCode, int resultCode, const QAndroidJniObject &data) override;
     void onActivityResult(int requestCode, int resultCode);
 
-    void checkPendingIntents(const QString workingDirPath);
+    void checkPendingIntents(const QString workingDirPath) override;
 
     static AndroidShareUtils* getInstance();
 
