@@ -79,7 +79,7 @@ ios {
 
     QMAKE_INFO_PLIST = ios/Info.plist
 
-    QMAKE_IOS_DEPLOYMENT_TARGET = 10.0
+    QMAKE_IOS_DEPLOYMENT_TARGET = 12.0
 
     disable_warning.name = GCC_WARN_64_TO_32_BIT_CONVERSION
     disable_warning.value = NO
