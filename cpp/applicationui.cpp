@@ -133,10 +133,11 @@ void ApplicationUI::copyAssetsToAPPData() {
 #if defined (Q_OS_IOS)
     QString docLocationRoot = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).value(0);
     qDebug() << "iOS: QStandardPaths::DocumentsLocation: " << docLocationRoot;
-#endif
-#if defined(Q_OS_ANDROID)
+#elif defined(Q_OS_ANDROID)
     QString docLocationRoot = QStandardPaths::standardLocations(QStandardPaths::AppDataLocation).value(0);
     qDebug() << "Android: QStandardPaths::AppDataLocation: " << docLocationRoot;
+#else
+    QString docLocationRoot = QStandardPaths::standardLocations(QStandardPaths::DocumentsLocation).value(0);
 #endif
     mDocumentsWorkPath = docLocationRoot.append("/share_example_x_files");
     if (!QDir(mDocumentsWorkPath).exists()) {
