@@ -17,6 +17,8 @@ lupdate_only {
     SOURCES +=  qml/main.qml
 }
 
+ CONFIG += debug_and_release
+
 OTHER_FILES += data_assets/*.png \
     data_assets/*.pdf \
     translations/*.* \
@@ -51,13 +53,9 @@ include(deployment.pri)
 
 DISTFILES += \
     android/AndroidManifest.xml \
-    android/gradle/wrapper/gradle-wrapper.jar \
-    android/gradlew \
     android/res/values/libs.xml \
     android/res/xml/filepaths.xml \
     android/build.gradle \
-    android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat \
     data_assets/ekke.jpg
 
 android {
