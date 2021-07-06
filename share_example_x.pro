@@ -13,9 +13,7 @@ SOURCES += cpp/main.cpp \
     cpp/shareutils.cpp \
     cpp/applicationui.cpp
 
-lupdate_only {
-    SOURCES +=  qml/main.qml
-}
+OTHER_FILES +=  qml/main.qml
 
 OTHER_FILES += data_assets/*.png \
     data_assets/*.pdf \
