@@ -91,7 +91,7 @@ android {
 
     # find this in shadow build android-build gradle.properties
     ANDROID_MIN_SDK_VERSION = "21"
-    ANDROID_TARGET_SDK_VERSION = "29"
+    ANDROID_TARGET_SDK_VERSION = "30"
 }
 
 ios {
