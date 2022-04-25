@@ -6,7 +6,7 @@
 #define DOCVIEWCONTROLLER_HPP
 
 #import <UIKit/UIKit.h>
-#import <iosshareutils.hpp>
+#import "iosshareutils.hpp"
 
 @interface DocViewController : UIViewController <UIDocumentInteractionControllerDelegate>
 
