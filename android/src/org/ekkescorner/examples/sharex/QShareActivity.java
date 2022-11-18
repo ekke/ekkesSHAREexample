@@ -94,6 +94,7 @@ public class QShareActivity extends QtActivity
     // this method here - otherwise you'll get wrong request or result codes
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         // Check which request we're responding to
         Log.d("ekkescorner onActivityResult", "requestCode: "+requestCode);
         if (resultCode == RESULT_OK) {
