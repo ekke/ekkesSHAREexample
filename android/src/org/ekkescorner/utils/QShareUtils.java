@@ -176,12 +176,19 @@ public class QShareUtils
             // grantUriPermission needed for KITKAT or older
             // see https://code.google.com/p/android/issues/detail?id=76683
             // also: https://stackoverflow.com/questions/18249007/how-to-use-support-fileprovider-for-sharing-content-to-other-apps
+
+            // did some changes to make it run with API 30+ and Android 13 devices.
+            // removed KitKat check and added queries to AndroidManifest
+            // thx: https://forum.qt.io/topic/127170/android-11-qdir-mkdir-does-not-always-work/11
+            context.grantUriPermission(targetPackageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+            /*
             if(isLowerOrEqualsKitKat) {
                 Log.d("ekkescorner", "legacy support grantUriPermission");
                 context.grantUriPermission(targetPackageName, uri, Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
                 // attention: you must revoke the permission later, so this only makes sense with getting back a result to know that Intent was done
                 // I always move or delete the file, so I don't revoke permission
             }
+            */
         }
 
         // check if there are apps found for our Intent to avoid that there was only our own removed app before
