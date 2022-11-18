@@ -48,7 +48,7 @@ const static int SEND_FILE_PDF = 10;
 const static int SEND_FILE_JPEG = 12;
 const static int SEND_FILE_DOCX = 13;
 
-ApplicationUI::ApplicationUI(QObject *parent) : QObject(parent), mShareUtils(new ShareUtils(this))
+ApplicationUI::ApplicationUI(QObject *parent) : QObject(parent), mShareUtils(new ShareUtils(this)), mPendingIntentsChecked(false)
 {
     // this is a demo application where we deal with an Image and a PDF as example
     // Image and PDF are delivered as qrc:/ resources at /data_assets
