@@ -46,13 +46,17 @@ ApplicationWindow {
     // alternate implementations:
     // currently only on Android and ignored under iOS)
     //
+
+    // OBSOLETE
     // cpp: AndroidShareUtils implements 2 differen ways to start an Intent:
     // default: one simple JNI Call and doing other stuff in Java
     // alternate Implementation: doing it all using JNI Calls (only some parts completely implemented, because the one-JNI-fits-it-all is the recommended way)
     // attention: to test JNI with QAndroidActivityResultReceiver you must uncomment onActivityResult() in QShareActivity.java
     // warning: the JNI way is only party implemented to demonstrate how uncomfortable this is
     // better only to use the Java way
-    property bool useAltImpl: false
+
+    // have removed the switch, because there are problems with  API 30+ and Android 13 devices
+    property bool useAltImpl: false // now always false
 
 
     SwipeView {
@@ -96,23 +100,24 @@ ApplicationWindow {
                 anchors.right: parent.right
                 anchors.rightMargin: 24
             }
-            Label {
-                id: androidInfoLabel
-                visible: Qt.platform.os === "android"
-                text: qsTr("On Android there are two implementations: pure JNI (complicated and not complete) or one simple JNI Call + some Java Classes (recommended)\nUsing Java FileProvider Files are shared from inside your sandbox and no extra permission WRITE_EXTERNAL_STORAGE is needed.")
-                wrapMode: Label.WordWrap
-                anchors.top: infoLabel.bottom
-                anchors.left: parent.left
-                anchors.topMargin: 24
-                anchors.leftMargin: 24
-                anchors.right: parent.right
-                anchors.rightMargin: 24
-            }
+            // removed alternate impl doesnt work anymore on API 30+ and Android 13+ devices
+//            Label {
+//                id: androidInfoLabel
+//                visible: Qt.platform.os === "android"
+//                text: qsTr("On Android there are two implementations: pure JNI (complicated and not complete) or one simple JNI Call + some Java Classes (recommended)\nUsing Java FileProvider Files are shared from inside your sandbox and no extra permission WRITE_EXTERNAL_STORAGE is needed.")
+//                wrapMode: Label.WordWrap
+//                anchors.top: infoLabel.bottom
+//                anchors.left: parent.left
+//                anchors.topMargin: 24
+//                anchors.leftMargin: 24
+//                anchors.right: parent.right
+//                anchors.rightMargin: 24
+//            }
             Label {
                 id: reverseLabel
                 text: qsTr("Sharing the reverse Way from other Apps to our App:\nGoTo the Page where you want to get the file.\nSwitch to another App, share File with our Example App.\nSingle Image should appear on current Page, other Filetypes or more Files should open a Popup")
                 wrapMode: Label.WordWrap
-                anchors.top: Qt.platform.os === "android"? androidInfoLabel.bottom : infoLabel.bottom
+                anchors.top: infoLabel.bottom // Qt.platform.os === "android"? androidInfoLabel.bottom : infoLabel.bottom
                 anchors.left: parent.left
                 anchors.topMargin: 24
                 anchors.leftMargin: 24
@@ -161,32 +166,32 @@ ApplicationWindow {
 
         Page {
             id: pageSend
-            Switch {
-                id: sendJNISwitch
-                visible: Qt.platform.os === "android"
-                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
-                checked: appWindow.useAltImpl
-                onCheckedChanged: {
-                    appWindow.useAltImpl = checked
-                }
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Label {
-                visible: appWindow.useAltImpl
-                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
-                color: "red"
-                anchors.top:sendJNISwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-            }
+//            Switch {
+//                id: sendJNISwitch
+//                visible: Qt.platform.os === "android"
+//                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+//                checked: appWindow.useAltImpl
+//                onCheckedChanged: {
+//                    appWindow.useAltImpl = checked
+//                }
+//                anchors.top: parent.top
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//                anchors.topMargin: 24
+//            }
+//            Label {
+//                visible: appWindow.useAltImpl
+//                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+//                color: "red"
+//                anchors.top:sendJNISwitch.bottom
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//            }
             ComboBox {
                 id: sendSwitch
                 model: theModel
                 currentIndex: 0
-                anchors.top: Qt.platform.os === "android"? sendJNISwitch.bottom : parent.top
+                anchors.top: parent.top // Qt.platform.os === "android"? sendJNISwitch.bottom : parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: appWindow.useAltImpl? 32 : 12
@@ -260,32 +265,32 @@ ApplicationWindow {
 
         Page {
             id: pageView
-            Switch {
-                id: viewJNISwitch
-                visible: Qt.platform.os === "android"
-                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
-                checked: appWindow.useAltImpl
-                onCheckedChanged: {
-                    appWindow.useAltImpl = checked
-                }
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Label {
-                visible: appWindow.useAltImpl
-                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
-                color: "red"
-                anchors.top:viewJNISwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-            }
+//            Switch {
+//                id: viewJNISwitch
+//                visible: Qt.platform.os === "android"
+//                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+//                checked: appWindow.useAltImpl
+//                onCheckedChanged: {
+//                    appWindow.useAltImpl = checked
+//                }
+//                anchors.top: parent.top
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//                anchors.topMargin: 24
+//            }
+//            Label {
+//                visible: appWindow.useAltImpl
+//                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+//                color: "red"
+//                anchors.top:viewJNISwitch.bottom
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//            }
             ComboBox {
                 id: viewSwitch
                 model: theModel
                 currentIndex: 0
-                anchors.top: Qt.platform.os === "android"? viewJNISwitch.bottom : parent.top
+                anchors.top: parent.top // Qt.platform.os === "android"? viewJNISwitch.bottom : parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: appWindow.useAltImpl? 32 : 12
@@ -379,32 +384,32 @@ ApplicationWindow {
 
         Page {
             id: pageEdit
-            Switch {
-                id: editJNISwitch
-                visible: Qt.platform.os === "android"
-                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
-                checked: appWindow.useAltImpl
-                onCheckedChanged: {
-                    appWindow.useAltImpl = checked
-                }
-                anchors.top: parent.top
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-                anchors.topMargin: 24
-            }
-            Label {
-                visible: appWindow.useAltImpl
-                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
-                color: "red"
-                anchors.top:editJNISwitch.bottom
-                anchors.left: parent.left
-                anchors.leftMargin: 24
-            }
+//            Switch {
+//                id: editJNISwitch
+//                visible: Qt.platform.os === "android"
+//                text: checked? "ON-> use Pure JNI\n(switch off for Java+JNI)" : "OFF-> use Java+JNI\n(switch on for Pure JNI)"
+//                checked: appWindow.useAltImpl
+//                onCheckedChanged: {
+//                    appWindow.useAltImpl = checked
+//                }
+//                anchors.top: parent.top
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//                anchors.topMargin: 24
+//            }
+//            Label {
+//                visible: appWindow.useAltImpl
+//                text: qsTr("Pure JNI not recommended.\nPlease read the blog / docs")
+//                color: "red"
+//                anchors.top:editJNISwitch.bottom
+//                anchors.left: parent.left
+//                anchors.leftMargin: 24
+//            }
             ComboBox {
                 id: editSwitch
                 model: theModel
                 currentIndex: 0
-                anchors.top: Qt.platform.os === "android"? editJNISwitch.bottom : parent.top
+                anchors.top: parent.top // Qt.platform.os === "android"? editJNISwitch.bottom : parent.top
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.topMargin: appWindow.useAltImpl? 32 : 12
