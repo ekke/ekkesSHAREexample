@@ -9,8 +9,8 @@
     <!-- %%INSERT_FEATURES -->
 
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
-    <application android:requestLegacyExternalStorage="true" android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="ekkes SHARE Example" android:extractNativeLibs="true">
-        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:name="org.ekkescorner.examples.sharex.QShareActivity" android:label="ekkes SHARE Example" android:screenOrientation="unspecified" android:launchMode="singleInstance">
+    <application android:requestLegacyExternalStorage="true" android:hardwareAccelerated="true" android:name="org.qtproject.qt5.android.bindings.QtApplication" android:label="ekkes SHARE Example" android:allowNativeHeapPointerTagging="false" android:allowBackup="true" android:fullBackupOnly="false">
+        <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:name="org.ekkescorner.examples.sharex.QShareActivity" android:label="ekkes SHARE Example" android:screenOrientation="unspecified" android:launchMode="singleInstance" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
