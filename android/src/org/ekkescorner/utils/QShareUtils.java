@@ -9,6 +9,12 @@
 // http://www.qtcentre.org/threads/58668-How-to-use-QAndroidJniObject-for-intent-setData
 // https://stackoverflow.com/questions/5734678/custom-filtering-of-intent-chooser-based-on-installed-android-package-name
 // see also /COPYRIGHT and /LICENSE
+// (c) 2023 Ekkehard Gentz (ekke)
+// switched from android.support.v4.content.FileProvider to androidx.core.content.FileProvider library.
+// changes in build.gradle and Android Manifest
+// also added to gradle.properties:
+//     android.useAndroidX=true
+//     android.enableJetifier=true
 
 package org.ekkescorner.utils;
 
@@ -39,8 +45,8 @@ import android.os.Parcelable;
 
 import android.os.Build;
 
-import android.support.v4.content.FileProvider;
-import android.support.v4.app.ShareCompat;
+import androidx.core.content.FileProvider;
+import androidx.core.app.ShareCompat;
 
 public class QShareUtils
 {
@@ -264,7 +270,9 @@ public class QShareUtils
             Log.d("ekkescorner sendFile w mimeType:", mimeType);
         }
 
-        sendIntent.setType(mimeType);
+        // had to change setType into setDataAndType to avoid SecurityException
+        // sendIntent.setType(mimeType);
+        sendIntent.setDataAndType(uri, mimeType);
 
         sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         sendIntent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
@@ -276,7 +284,7 @@ public class QShareUtils
         if (QtNative.activity() == null)
             return false;
 
-        // using v4 support library create the Intent from ShareCompat
+        // using androidx.core library create the Intent from ShareCompat
         // Intent viewIntent = new Intent();
         Intent viewIntent = ShareCompat.IntentBuilder.from(QtNative.activity()).getIntent();
         viewIntent.setAction(Intent.ACTION_VIEW);
