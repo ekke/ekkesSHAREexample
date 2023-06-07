@@ -23,7 +23,7 @@ On Android we're using Intents, on iOS UIDocumentInteractionController.
 
 
 Developed and tested on Android 6 - 13 (API 31), iOS and Qt 5.15.13
-Android: This release now supports FileProvider and sets Permissions if incoming Files need, also androidx.core libraray used instead of support libraray
+Android: This release now supports FileProvider and sets Permissions if incoming Files need, also androidx.core library used instead of support library
 iOS: This release supports Xcode 12 and minimum iOS 12 (required by Qt 5.15)
 
 Now more examplels included to share with other Apps: PNG, JPEG, DOCX, PDF
