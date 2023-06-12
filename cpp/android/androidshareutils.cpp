@@ -72,6 +72,7 @@ void AndroidShareUtils::share(const QString &text, const QUrl &url)
 /*
  * As default we're going the Java - way with one simple JNI call (recommended)
  * if altImpl is true we're going the pure JNI way
+ * HINT: we don't use altImpl anymore
  *
  * If a requestId was set we want to get the Activity Result back (recommended)
  * We need the Request Id and Result Id to control our workflow
@@ -194,6 +195,7 @@ void AndroidShareUtils::sendFile(const QString &filePath, const QString &title, 
 /*
  * As default we're going the Java - way with one simple JNI call (recommended)
  * if altImpl is true we're going the pure JNI way
+ * HINT: we don't use altImpl anymore
  *
  * If a requestId was set we want to get the Activity Result back (recommended)
  * We need the Request Id and Result Id to control our workflow
@@ -299,6 +301,7 @@ void AndroidShareUtils::viewFile(const QString &filePath, const QString &title, 
 /*
  * As default we're going the Java - way with one simple JNI call (recommended)
  * if altImpl is true we're going the pure JNI way
+ * HINT: we don't use altImpl anymore
  *
  * If a requestId was set we want to get the Activity Result back (recommended)
  * We need the Request Id and Result Id to control our workflow
