@@ -44,7 +44,7 @@ public class QShareActivity extends QtActivity
     //
     public static native void fireActivityResult(int requestCode, int resultCode);
     //
-    public static native boolean checkFileExits(String url);
+    public static native boolean checkFileExists(String url);
 
     public static boolean isIntentPending;
     public static boolean isInitialized;
@@ -210,7 +210,7 @@ public class QShareActivity extends QtActivity
             Log.d("ekkescorner QSharePathResolver:", filePath);
             // to be safe check if this File Url really can be opened by Qt
             // there were problems with MS office apps on Android 7
-            if (checkFileExits(filePath)) {
+            if (checkFileExists(filePath)) {
                 setFileUrlReceived(filePath);
                 // we are done Qt can deal with file scheme
                 return;

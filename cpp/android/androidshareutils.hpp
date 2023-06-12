@@ -31,7 +31,7 @@ public:
 public slots:
     void setFileUrlReceived(const QString &url);
     void setFileReceivedAndSaved(const QString &url);
-    bool checkFileExits(const QString &url);
+    bool checkFileExists(const QString &url);
 
 private:
     bool mIsEditMode;

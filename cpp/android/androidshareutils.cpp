@@ -525,14 +525,14 @@ void AndroidShareUtils::setFileReceivedAndSaved(const QString &url)
 
 // to be safe we check if a File Url from java really exists for Qt
 // if not on the Java side we'll try to read the content as Stream
-bool AndroidShareUtils::checkFileExits(const QString &url)
+bool AndroidShareUtils::checkFileExists(const QString &url)
 {
     if(url.isEmpty()) {
-        qWarning() << "checkFileExits: we got an empty URL";
+        qWarning() << "checkFileExists: we got an empty URL";
         emit shareError(0, tr("Empty URL received"));
         return false;
     }
-    qDebug() << "AndroidShareUtils checkFileExits: we got the File URL from JAVA: " << url;
+    qDebug() << "AndroidShareUtils checkFileExists: we got the File URL from JAVA: " << url;
     QString myUrl;
     if(url.startsWith("file://")) {
         myUrl= url.right(url.length()-7);
@@ -585,13 +585,13 @@ JNIEXPORT void JNICALL
 }
 
 JNIEXPORT bool JNICALL
-  Java_org_ekkescorner_examples_sharex_QShareActivity_checkFileExits(JNIEnv *env,
+  Java_org_ekkescorner_examples_sharex_QShareActivity_checkFileExists(JNIEnv *env,
                                         jobject obj,
                                         jstring url)
 {
     const char *urlStr = env->GetStringUTFChars(url, NULL);
     Q_UNUSED (obj)
-    bool exists = AndroidShareUtils::getInstance()->checkFileExits(urlStr);
+    bool exists = AndroidShareUtils::getInstance()->checkFileExists(urlStr);
     env->ReleaseStringUTFChars(url, urlStr);
     return exists;
 }
