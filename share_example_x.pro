@@ -2,7 +2,7 @@
 TEMPLATE = app
 TARGET = share_example_x
 
-QT += qml quick core
+QT += qml quick quickcontrols2
 
 CONFIG += c++11
 

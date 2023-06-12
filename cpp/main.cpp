@@ -7,13 +7,18 @@
 
 #include <QQmlContext>
 
+#include <QQuickStyle>
+
 #include "applicationui.hpp"
 
 int main(int argc, char *argv[])
 {
     QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
-    qputenv("QT_QUICK_CONTROLS_STYLE", "material");
+    QQuickStyle::setStyle("Material");
     QGuiApplication app(argc, argv);
+
+    app.setOrganizationName("ekkes-corner");
+    app.setOrganizationDomain("org.ekkescorner.share.example");
 
     ApplicationUI appui;
 
