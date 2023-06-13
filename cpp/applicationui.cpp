@@ -386,3 +386,45 @@ bool ApplicationUI::checkPermission() {
    return true;
 }
 #endif
+
+#if defined(Q_OS_ANDROID)
+
+// to get access to all files you need a special permission
+// add <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/> to your Manifest
+// then ask user to get full access
+// HINT: if you want to deploy your app via Play Store, you have to ask Google to use this permission
+// per ex. an app like a FileManager could be valid
+// if your business app is running inside a MDM, you don't need to ask Google
+// ATTENTION: don't forget to set your package name !
+// see https://forum.qt.io/topic/137019/cannot-grant-manage_external_storage-permission-on-android-11/2
+// see https://bugreports.qt.io/browse/QTBUG-98974?focusedCommentId=680551&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-680551
+void ApplicationUI::accessAllFiles()
+{
+   // QOperatingSystemVersion("Android", 13.0.0)
+   // QOperatingSystemVersion("macOS", 12.5.0)
+   qDebug() << "current QOperatingSystemVersion:" << QOperatingSystemVersion::current();
+   if(QOperatingSystemVersion::current() >= QOperatingSystemVersion(QOperatingSystemVersion::Android, 13)) {
+        qDebug() << "it is Android 13 or greater !";
+   }
+   if(QOperatingSystemVersion::current() < QOperatingSystemVersion(QOperatingSystemVersion::Android, 11)) {
+        qDebug() << "it is less then Android 11 - ALL FILES permission isn't possible!";
+        return;
+   }
+
+// Here you have to set your PackageName
+#define PACKAGE_NAME "package:org.ekkescorner.examples.sharex"
+   jboolean value = QAndroidJniObject::callStaticMethod<jboolean>("android/os/Environment", "isExternalStorageManager");
+   if(value == false) {
+        qDebug() << "requesting ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION";
+        QAndroidJniObject ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION = QAndroidJniObject::getStaticObjectField( "android/provider/Settings", "ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION","Ljava/lang/String;" );
+        QAndroidJniObject intent("android/content/Intent", "(Ljava/lang/String;)V", ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION.object());
+        QAndroidJniObject jniPath = QAndroidJniObject::fromString(PACKAGE_NAME);
+        QAndroidJniObject jniUri = QAndroidJniObject::callStaticObjectMethod("android/net/Uri", "parse", "(Ljava/lang/String;)Landroid/net/Uri;", jniPath.object<jstring>());
+        QAndroidJniObject jniResult = intent.callObjectMethod("setData", "(Landroid/net/Uri;)Landroid/content/Intent;", jniUri.object<jobject>() );
+        QtAndroid::startActivity(intent, 0);
+   } else {
+        qDebug() << "SUCCESS ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION";
+   }
+}
+#endif
+

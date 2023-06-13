@@ -411,6 +411,15 @@ ApplicationWindow {
                 }
             }
         }
+        Component.onCompleted: {
+            // to get access to all files you need a special permission
+            // add <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"/> to your Manifest
+            // then ask user to get full access
+            // HINT: if you want to deploy your app via Play Store, you have to ask Google to use this permission
+            // per ex. an app like a FileManager could be valid
+            // if your business app is running inside a MDM, you don't need to ask Google
+            myApp.accessAllFiles()
+        }
     }
 
     footer: TabBar {

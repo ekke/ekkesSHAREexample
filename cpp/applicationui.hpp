@@ -34,6 +34,9 @@ public:
 #if defined(Q_OS_ANDROID)
      Q_INVOKABLE
      bool checkPermission();
+
+     Q_INVOKABLE
+     void accessAllFiles();
 #endif
 
 signals:
