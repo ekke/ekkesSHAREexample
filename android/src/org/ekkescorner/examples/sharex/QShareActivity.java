@@ -102,6 +102,15 @@ public class QShareActivity extends QtActivity
         } else {
             Log.d("ekkescorner onActivityResult - resultCode: ", "CANCEL");
         }
+
+        // Attention using FileDialog can trigger onActivityResult
+        // with requestCode 1305
+        // see https://code.qt.io/cgit/qt/qtbase.git/tree/src/plugins/platforms/android/qandroidplatformfiledialoghelper.cpp#n22
+        if (requestCode == 1305) {
+            Log.d("ekkescorner onActivityResult - requestCode 1305 (Qt FileDialog): ", "IGNORE");
+            return;
+        }
+
         // hint: result comes back too fast for Action SEND
         // if you want to delete/move the File add a Timer w 500ms delay
         // see Example App main.qml - delayDeleteTimer

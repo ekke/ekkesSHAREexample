@@ -95,6 +95,8 @@ android {
 }
 
 ios {
+    LIBS += -framework Photos
+
     OBJECTIVE_SOURCES += ios/src/iosshareutils.mm \
     ios/src/docviewcontroller.mm
 

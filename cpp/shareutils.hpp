@@ -83,6 +83,9 @@ public:
     Q_INVOKABLE void editFile(const QString &filePath, const QString &title, const QString &mimeType, const int &requestId, const bool &altImpl);
     Q_INVOKABLE void checkPendingIntents(const QString workingDirPath);
 
+    // testing native FileDialog
+    Q_INVOKABLE bool verifyFileUrl(const QString &fileUrl);
+
 private:
     PlatformShareUtils* mPlatformShareUtils;
 

@@ -33,6 +33,10 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+        <key>NSPhotoLibraryUsageDescription</key>
+               <string>This App uses Photos</string>
+               <key>NSCameraUsageDescription</key>
+               <string>This App needs access to your Camera.</string>
         <key>CFBundleDocumentTypes</key>
                 <array>
                         <dict>

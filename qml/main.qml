@@ -2,10 +2,11 @@
 // my blog about Qt for mobile: http://j.mp/qt-x
 // see also /COPYRIGHT and /LICENSE
 
-import QtQuick 2.7
-import QtQuick.Controls 2.2
-import QtQuick.Layouts 1.3
-import QtQuick.Controls.Material 2.2
+import QtQuick 2.15
+import QtQuick.Controls 2.15
+import QtQuick.Layouts 1.15
+import QtQuick.Controls.Material 2.15
+import QtQuick.Dialogs 1.3
 
 ApplicationWindow {
     id: appWindow
@@ -101,9 +102,32 @@ ApplicationWindow {
             Label {
                 id: permissionLabel
                 visible: Qt.platform.os === "android"
-                text: qsTr("To receive Files from other Apps you need WRITE_EXTERNAL_STORAGE Permission. This App will ask you if Permission not set yet.\nEasy stuff for Qt 5.10+ :)")
+                text: qsTr("To receive Files from other Apps you need WRITE_EXTERNAL_STORAGE Permission. This App will ask you if Permission not set yet.\n")
                 wrapMode: Label.WordWrap
                 anchors.top: reverseLabel.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
+            Label {
+                id: dialogLabel
+                text: qsTr("Instead of calling our App from other Apps to get files, we can also use the native FileDialog from QML.\nExample implemented at VIEW Page.\n")
+                color: Material.primaryColor
+                wrapMode: Label.WordWrap
+                anchors.top: permissionLabel.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+            }
+            Label {
+                id: manageFilesLabel
+                visible: Qt.platform.os === "android"
+                text: qsTr("The App also includes an example HowTo grant access to MANAGE_EXTERNAL_STORAGE.\nsee this main.qml Component.onClompeted\n")
+                color: Material.accentColor
+                wrapMode: Label.WordWrap
+                anchors.top: dialogLabel.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 24
                 anchors.right: parent.right
@@ -300,6 +324,68 @@ ApplicationWindow {
                 anchors.leftMargin: 24
                 anchors.topMargin: 24
             }
+            Label {
+                id: fileDialogLabel
+                text: qsTr("View (read/copy) Files using native FileDialog.\nAttention\nAndroid: watch requestCode 1305 in QShareActivity.java onActivityResult()\nIOS: fileUrl must be converted to local file to be used in CPP")
+                color: Material.primaryColor
+                wrapMode: Label.WordWrap
+                anchors.top: viewButtonCheckMime.bottom
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.rightMargin: 24
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+            }
+            FileDialog {
+                id: myFileDialog
+                title: qsTr("Select a File")
+                selectExisting: true
+                selectFolder: false
+                // to make it simpler in this example we only deal with the first selected file
+                // HINT: on IOS there always can only be selected ONE file
+                // to enable multi files you have to create a FileDialog by yourself === some work to get a great UX
+                selectMultiple: true
+                folder: Qt.platform.os === "ios"? shortcuts.pictures:""
+                onAccepted: {
+                    if(fileUrls.length) {
+                        console.log("we selected: ", fileUrls[0])
+                        // hint: on IOS the fileUrl must be converted to local file
+                        // to be understood by CPP see shareUtils.verifyFileUrl
+                        if(shareUtils.verifyFileUrl(fileUrls[0])) {
+                            console.log("YEP: the file exists")
+                            popup.labelText = qsTr("The File exists and can be accessed\n%1").arg(fileUrls[0])
+                            popup.open()
+                            // it's up to you to copy the file, display image, etc
+                            // here we only check if File can be accessed or not
+                            return
+                        } else {
+                            if(Qt.platform.os === "ios") {
+                                popup.labelText = qsTr("The File CANNOT be accessed.\n%1").arg(fileUrls[0])
+                            } else {
+                                // Attention with Spaces or Umlauts in FileName if 5.15.14
+                                // see https://bugreports.qt.io/browse/QTBUG-114435
+                                // and workaround for SPACES: https://bugreports.qt.io/browse/QTBUG-112663
+                                popup.labelText = qsTr("The File CANNOT be accessed.\nFile Names with spaces or Umlauts please wait for Qt 5.15.15\n%1").arg(fileUrls[0])
+                            }
+                            popup.open()
+                        }
+                    } else {
+                        console.log("no file selected")
+                    }
+                }
+            } // myFileDialog
+            Button {
+                id: fileDialogButton
+                text: qsTr("Select File from FileDialog")
+                anchors.top: fileDialogLabel.bottom
+                anchors.left: parent.left
+                anchors.leftMargin: 24
+                anchors.topMargin: 24
+                onClicked: {
+                    myFileDialog.open()
+                }
+            }
+
             Image {
                 id: image3
                 anchors.top: parent.top
@@ -418,20 +504,22 @@ ApplicationWindow {
             // HINT: if you want to deploy your app via Play Store, you have to ask Google to use this permission
             // per ex. an app like a FileManager could be valid
             // if your business app is running inside a MDM, you don't need to ask Google
-            myApp.accessAllFiles()
+            if(Qt.platform.os === "android") {
+                myApp.accessAllFiles()
+            }
         }
     }
 
     footer: TabBar {
         id: tabBar
         currentIndex: swipeView.currentIndex
-        width: parent.width
+        width: parent.width-12
         Repeater {
             id: tabButtonRepeater
             model: [qsTr("Home"), qsTr("Text"), qsTr("Send"), qsTr("View"), qsTr("Edit")]
                 TabButton {
                     text: modelData
-                    width: Math.max(90, tabBar.width/tabButtonRepeater.model.length)
+                    width: tabBar.width/(tabButtonRepeater.model.length)
                 }
         } // tab repeater
     } // footer
@@ -608,7 +696,7 @@ ApplicationWindow {
         closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
         x: 16
         y: 16
-        implicitHeight: 160
+        implicitHeight: 240
         implicitWidth: appWindow.width * .9
         property alias labelText: popupLabel.text
         Column {

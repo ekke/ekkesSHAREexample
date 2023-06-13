@@ -3,6 +3,8 @@
 // see also /COPYRIGHT and /LICENSE
 
 #include "shareutils.hpp"
+#include <QFileInfo>
+#include <QUrl>
 
 #ifdef Q_OS_IOS
 #include "cpp/ios/iosshareutils.hpp"
@@ -77,6 +79,41 @@ void ShareUtils::editFile(const QString &filePath, const QString &title, const Q
 void ShareUtils::checkPendingIntents(const QString workingDirPath)
 {
     mPlatformShareUtils->checkPendingIntents(workingDirPath);
+}
+
+// testing native FileDialog
+bool ShareUtils::verifyFileUrl(const QString &fileUrl)
+{
+#if defined(Q_OS_ANDROID)
+    QFileInfo fileInfo(fileUrl);
+    qDebug() << "verifying fileUrl: " << fileUrl;
+    qDebug() << "BASE: " << fileInfo.baseName();
+    return fileInfo.exists();
+#endif
+#if defined(Q_OS_IOS)
+    qDebug() << "verify iOS File from assets-library " << fileUrl;
+
+    QUrl url(fileUrl);
+    QString iosFile = url.toLocalFile();
+    qDebug() << "converted to LocaleFile: " << iosFile;
+
+    QFileInfo theFile(iosFile);
+
+    if (!theFile.exists()) {
+        qWarning("iOS File does N O T exist");
+        return false;
+    }
+    qDebug("Path from QML: The file E X I S T S");
+    if (theFile.isReadable()) {
+        qDebug("iosFile SUCCESS: can open file for reading");
+        return true;
+    }  else {
+        qWarning("iosFile FAILS: can NOT open file for reading");
+    }
+    return false;
+#endif
+    // not used yet for other OS
+    return false;
 }
 
 void ShareUtils::onShareEditDone(int requestCode)
