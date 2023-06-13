@@ -26,6 +26,8 @@ Developed and tested on Android 6 - 13 (API 31), iOS and Qt 5.15.13
 Android: This release now supports FileProvider and sets Permissions if incoming Files need, also androidx.core library used instead of support library
 iOS: This release supports Xcode 12 and minimum iOS 12 (required by Qt 5.15)
 
+2023-06-13 new: using native FileDialog (Android, iOS), also HowTo grant Permissions to manage external storage on Android)
+
 Now more examplels included to share with other Apps: PNG, JPEG, DOCX, PDF
 
 Here's an Overview about the workflows, per ex. Open a File from inside your App and edit in another App outside.
